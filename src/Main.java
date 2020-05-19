@@ -8,6 +8,6 @@ public class Main {
      * @param args the arguments given from the command line (should be null)
      */
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        System.out.println("w");
     }
 }
