@@ -1,3 +1,9 @@
+/** An enum to represent and store the standard roles in a game of ONUW:
+ *  Doppelganger, Werewolf, Minion, Mason, Seer, Robber, Troublemaker, Drunk,
+ *  Insomniac, Villager, Hunter, and Tanner.
+ *
+ * @author Evan Gao
+ */
 public enum StandardRoles implements Role {
     DOPPELGANGER("Doppelganger", null) {
         //FIXME, also team should not be null, we will figure it out
@@ -32,9 +38,12 @@ public enum StandardRoles implements Role {
     },
     TANNER("Tanner", StandardTeams.TANNER);
 
+    /** The name of the role. */
     private String _name;
+    /** The team that this role belongs to. */
     private Team _team;
 
+    /** The constructor for a StandardRole object. */
     StandardRoles(String name, Team team) {
         _name = name;
         _team = team;
