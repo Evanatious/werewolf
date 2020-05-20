@@ -34,12 +34,13 @@ public class Game {
     public static final int NUM_CARDS_IN_MIDDLE = 3;
     /** The minimum number of players a game can have. */
     public static final int MIN_NUM_PLAYERS = 3;
+
+    //TODO: Implement time limits between moves, etc.
+
     /** The set of players in this game. */
     private Set<Player> _players;
     /** The three center cards. */
     private Card[] _middle;
-    /** The outer cards (should be # of players) */
-    private Card[] _outer; //FIXME: Unnecessary?
     /** The state of the game. */
     private boolean _gameOver;
     /** The winning team of this game. */
@@ -101,6 +102,10 @@ public class Game {
      */
     public List<Card> getCards() {
         return _cards;
+    }
+
+    public Card[] getMiddle() {
+        return _middle;
     }
 
     /** Starts this game. Shuffles all the given cards. Then, sets the middle

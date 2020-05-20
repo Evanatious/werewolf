@@ -49,6 +49,26 @@ public enum StandardRoles implements Role {
         _team = team;
     }
 
+    /** A helper method that finds the player with the specified role in the
+     *  given game.
+     *
+     * @param game the game to look for the player in
+     * @param role the role of the player to look for
+     * @return the player with the specified role in the given game
+     */
+    private static Player findPlayer(Game game, Role role) {
+        for (Player p: game.getPlayers()) {
+            if (p.getInitRole() == role) {
+                return p;
+            }
+        }
+        return null; //Should never reach this line;
+    }
+    
+    private static void findRole(Game game, Role role) {
+
+    }
+
     @Override
     public void doAction(Game game) {
 

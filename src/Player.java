@@ -1,3 +1,5 @@
+import java.util.*;
+
 /** A class that represents a player in ONUW.
  *
  * @authoer Evan Gao
@@ -26,6 +28,60 @@ public class Player {
         _alive = true;
     }
 
+    /** Displays the given info to this player. THIS NEEDS HELLA WORK AND DECKING OUT
+     * Need to figure out what the parameter should be. Is it a String or what?
+     * Might have a parameter to determine what type of info is displayed (EX:
+     * if your has changed, what a role is, what cards are available to you, etc.)
+     */
+    public void displayInfo() {
+        //TODO
+    }
+
+    /** Prompts this player when they are given a choice that is optional (has
+     *  "may" in its phrasing), and has them make a selection.
+     *
+     * @param message the message that is displayed along with the choice
+     * @return true if this player decides to take the action, and false
+     * otherwise
+     */
+    public boolean promptMayAction(String message) {
+        return true; //FIXME
+    }
+
+    /** Prompts this player to pick an amount of cards equal to numCards from
+     *  the middle cards.
+     *
+     * @param message the message that is displayed along with the choice
+     * @return the Card that this player chooses
+     */
+    public Card[] promptChooseCardAction(String message, int numCards) {
+        List<Object> cardPool = new ArrayList<Object>();
+        Card[] mid = _game.getMiddle();
+        for (int i = 0; i < mid.length; i++) {
+            cardPool.add(mid[i]);
+        }
+        Card[] selected =
+            Arrays.copyOf(choose(cardPool, numCards), numCards, Card[].class);
+        return selected;
+    }
+
+    public Player[] promptChoosePlayerAction(String message, int numPlayers) {
+        HashSet<Object> playerPool = new HashSet<Object>(_game.getPlayers());
+        return Arrays.copyOf(choose(playerPool, numPlayers),
+            numPlayers, Player[].class);
+    }
+
+    /** A helper method that helps a player choose from a collection/pool of
+     *  objects (could be players, cards, etc.).
+     *
+     * @param c the collection to choose from
+     * @param numObjects the number of objects to choose
+     * @return
+     */
+    public Object[] choose(Collection<Object> c, int numObjects) {
+        return null; //FIXME: Maybe needs a String message?
+    }
+
     /** Kills this player by setting their _alive status to false. */
     public void kill() {
         _alive = false;
@@ -44,9 +100,12 @@ public class Player {
     /** Replaces this player's card with the argument named 'card'.
      *
      * @param card the Card that this player will now have
+     * @return the Card this player used to have
      */
-    public void swapCard(Card card) {
+    public Card swapCard(Card card) {
+        Card result = _card;
         _card = card;
+        return result;
     }
 
     /** A getter method that returns whether or not this player is alive.
@@ -67,6 +126,14 @@ public class Player {
         return _card.getRole().getTeam() == _game.getWinningTeam();
     }
 
+    /** A getter method that returns this player's card.
+     *
+     * @return this player's card
+     */
+    public Card getCard() {
+        return _card;
+    }
+
     /** A getter method that returns this player's name.
      *
      * @return this player's name
@@ -82,5 +149,13 @@ public class Player {
      */
     public Role getFinalRole() {
         return _card.getRole();
+    }
+
+    /** A getter method that returns this player's role at the start of the game.
+     *
+     * @return the role this player started with
+     */
+    public Role getInitRole() {
+        return _initRole;
     }
 }
