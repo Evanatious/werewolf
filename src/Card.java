@@ -3,7 +3,7 @@
  * @author Evan Gao
  */
 public class Card {
-    /** The card's role. */
+    /** This card's role. */
     private Role _role;
     /** The Game this card belongs to. */
     private Game _game;
@@ -11,6 +11,7 @@ public class Card {
     /** The constructor for a Card object.
      *
      * @param role the role this card will have
+     * @param game the game this card belongs to
      */
     public Card(Role role, Game game) {
         _role = role;

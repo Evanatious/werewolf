@@ -4,7 +4,7 @@
  *
  * @author Evan Gao
  */
-public enum StandardRoles implements Role {
+public enum StandardRole implements Role {
     DOPPELGANGER("Doppelganger", null) {
         //FIXME, also team should not be null, we will figure it out
     },
@@ -14,29 +14,29 @@ public enum StandardRoles implements Role {
     MINION("Minion", StandardTeams.WEREWOLF) {
 
     },
-    MASON("Mason", StandardTeams.TOWN) {
+    MASON("Mason", StandardTeams.VILLAGE) {
 
     },
-    SEER("Seer", StandardTeams.TOWN) {
+    SEER("Seer", StandardTeams.VILLAGE) {
 
     },
-    ROBBER("Robber", StandardTeams.TOWN) {
+    ROBBER("Robber", StandardTeams.VILLAGE) {
 
     },
-    TROUBLEMAKER("Troublemaker", StandardTeams.TOWN) {
+    TROUBLEMAKER("Troublemaker", StandardTeams.VILLAGE) {
 
     },
-    DRUNK("Drunk", StandardTeams.TOWN) {
+    DRUNK("Drunk", StandardTeams.VILLAGE) {
 
     },
-    INSOMNIAC("Insomniac", StandardTeams.TOWN) {
+    INSOMNIAC("Insomniac", StandardTeams.VILLAGE) {
 
     },
-    VILLAGER("Villager", StandardTeams.TOWN),
-    HUNTER("Hunter", StandardTeams.TOWN) {
+    VILLAGER("Villager", StandardTeams.VILLAGE),
+    HUNTER("Hunter", StandardTeams.VILLAGE) {
 
     },
-    TANNER("Tanner", StandardTeams.TANNER);
+    TANNER("Tanner", StandardTeams.NEUTRAL);
 
     /** The name of the role. */
     private String _name;
@@ -44,7 +44,7 @@ public enum StandardRoles implements Role {
     private Team _team;
 
     /** The constructor for a StandardRole object. */
-    StandardRoles(String name, Team team) {
+    StandardRole(String name, Team team) {
         _name = name;
         _team = team;
     }
@@ -64,7 +64,7 @@ public enum StandardRoles implements Role {
         }
         return null; //Should never reach this line;
     }
-    
+
     private static void findRole(Game game, Role role) {
 
     }

@@ -52,7 +52,8 @@ public class Player {
      *  the middle cards.
      *
      * @param message the message that is displayed along with the choice
-     * @return the Card that this player chooses
+     * @param numCards the number of cards that will be selected
+     * @return the Card(s) that this player chooses
      */
     public Card[] promptChooseCardAction(String message, int numCards) {
         List<Object> cardPool = new ArrayList<Object>();
@@ -65,8 +66,16 @@ public class Player {
         return selected;
     }
 
+    /** Prompts this player to pick a number of players equal to numPlayers (the
+     *  chosen player(s) must be someone other than this player).
+     *
+     * @param message the message that is displayed along with the choice
+     * @param numPlayers the number of players that will be selected
+     * @return the Player(s) that this player chooses
+     */
     public Player[] promptChoosePlayerAction(String message, int numPlayers) {
         HashSet<Object> playerPool = new HashSet<Object>(_game.getPlayers());
+        playerPool.remove(this);
         return Arrays.copyOf(choose(playerPool, numPlayers),
             numPlayers, Player[].class);
     }
@@ -76,7 +85,7 @@ public class Player {
      *
      * @param c the collection to choose from
      * @param numObjects the number of objects to choose
-     * @return
+     * @return an array of the objects chosen
      */
     public Object[] choose(Collection<Object> c, int numObjects) {
         return null; //FIXME: Maybe needs a String message?
@@ -123,7 +132,12 @@ public class Player {
      */
     public boolean isWinner() {
         assert _game.gameOver();
-        return _card.getRole().getTeam() == _game.getWinningTeam();
+        //FIXME: Special cases: Doppelganger, Assassin, Cupid, Diseased, Instigator, Copycat, Apprentice Assassin
+        if (true) {
+            return true;
+        } else {
+            return getFinalRole().getTeam() == _game.getWinningTeam();
+        }
     }
 
     /** A getter method that returns this player's card.

@@ -3,8 +3,8 @@
  *
  * @author Evan Gao
  */
-public enum StandardTeams implements Team {
-    TOWN,
+public enum StandardTeam implements Team {
+    VILLAGE,
     WEREWOLF,
-    TANNER
+    NEUTRAL
 }

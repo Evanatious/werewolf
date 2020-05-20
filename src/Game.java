@@ -14,13 +14,13 @@ public class Game {
     static {
         Game app = getApp();
         List<Card> temp = new ArrayList<Card>();
-        for (Role r: StandardRoles.values()) {
-            if (r == StandardRoles.VILLAGER) {
+        for (Role r: StandardRole.values()) {
+            if (r == StandardRole.VILLAGER) {
                 for (int i = 0; i < 3; i++) {
                     temp.add(new Card(r, app));
                 }
-            } else if (r == StandardRoles.WEREWOLF
-                || r == StandardRoles.MASON) {
+            } else if (r == StandardRole.WEREWOLF
+                || r == StandardRole.MASON) {
                 for (int i = 0; i < 2; i++) {
                     temp.add(new Card(r, app));
                 }
@@ -30,13 +30,30 @@ public class Game {
         }
         DEFAULT_CARDS = Collections.unmodifiableList(temp);
     }
+    private boolean usingDefault;
+    private boolean usingDaybreak;
+    private boolean usingVampire;
+    private boolean usingAlien;
+    private boolean usingSuperVillain;
+    private boolean usingBonus1;
+    private boolean usingBonus2;
+    private boolean usingBonus3;
     /** The number of cards that belong in the middle. */
     public static final int NUM_CARDS_IN_MIDDLE = 3;
     /** The minimum number of players a game can have. */
     public static final int MIN_NUM_PLAYERS = 3;
 
     //TODO: Implement time limits between moves, etc.
+    /*TODO: Implement alternate rules
+       (EX: If Tanner dies, they alone win. If there are multiple Tanners, they
+        both win if one is killed. If there is a lone minion with no werewolves,
+        the minion becomes a lone werewolf and can look at the center card. If
+        there is a lone minion, reshuffle (same idea-ish). If villagers kill a
+        villager, they lose, etc.) */
 
+
+    /** The role that the doppelganger card becomes. */
+    private Role _doppelRole; //TODO: Might need one for every role that changes roles without swapping cards, like copycat and body snatcher
     /** The set of players in this game. */
     private Set<Player> _players;
     /** The three center cards. */
@@ -108,13 +125,15 @@ public class Game {
         return _middle;
     }
 
-    /** Starts this game. Shuffles all the given cards. Then, sets the middle
-     *  three cards, and also distributes each player a card. */
-    public void startGame() {
+    /** Sets up this game. Shuffles all the given cards. Then, sets the middle
+     *  cards, and distributes the rest of the cards to the players (one card
+     *  each). */
+    public void setUpGame() {
         assert _players.size() >= MIN_NUM_PLAYERS
             && _players.size() <= DEFAULT_CARDS.size() - NUM_CARDS_IN_MIDDLE
             && _cards.size() == _players.size() + NUM_CARDS_IN_MIDDLE;
 
+        restart();
         _middle = new Card[NUM_CARDS_IN_MIDDLE];
 
         Collections.shuffle(_cards);
@@ -137,13 +156,44 @@ public class Game {
         return _gameOver;
     }
 
-    /** A getter method that returns the winning team of this game. Assumes that
+    /** A method that returns the winning team of this game. Assumes that
      *  this game is over.
      *
      * @return the winning team of this game
      */
     public Team getWinningTeam() {
         assert gameOver();
+        if (_winningTeam == null) {
+            boolean someoneNotAWWDied = false;
+            boolean tannerDied = false;
+            for (Player p: _players) {
+                if (!p.isAlive()) {
+                    if (p.getFinalRole().getTeam() == StandardTeam.WEREWOLF
+                    && p.getFinalRole() != StandardRole.MINION) {
+                        _winningTeam = StandardTeam.VILLAGE;
+                        break;
+                    }
+                    if (p.getFinalRole() == StandardRole.TANNER) {
+                        tannerDied = true;
+                        //TODO: Fix this so that this also applies to lone apprentice tanner?
+                    }
+                    someoneNotAWWDied = true;
+                }
+            }
+
+            if (_winningTeam == null && !tannerDied && someoneNotAWWDied) {
+                _winningTeam = StandardTeam.WEREWOLF;
+            }
+        }
         return _winningTeam;
+    }
+
+    /** A method that restarts the state of the game, setting everything back
+     *  as if a completely new game were being started. */
+    public void restart() {
+        _winningTeam = null;
+        _players = new HashSet<Player>();
+        _cards = new ArrayList<Card>();
+        _gameOver = false;
     }
 }
