@@ -3,8 +3,11 @@
  * @author Evan Gao
  */
 public interface Role {
-    /** Perform this role's specified action. */
-    void doAction();
+    /** Perform this role's specified action.
+     *
+     * @param game the Game to which this role should perform its action on
+     */
+    void doAction(Game game);
 
     /** A getter method that returns what team this role belongs to.
      *

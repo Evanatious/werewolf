@@ -50,7 +50,7 @@ public enum StandardRoles implements Role {
     }
 
     @Override
-    public void doAction() {
+    public void doAction(Game game) {
 
     }
 
