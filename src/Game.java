@@ -41,17 +41,7 @@ public class Game {
     private boolean usingBonus3;
      */
 
-    /** A boolean that determines if there is anyone on the werewolf team. */
-    //private boolean _werewolfTeam;
-    /** A boolean that determines if there is anyone on the village team. */
-    //private boolean _villageTeam;
-    /** A boolean that determines if there is anyone on the vampire team. */
-    //private boolean _vampireTeam;
-    /** A boolean that determines if there is anyone on the alien team. */
-    //private boolean _alienTeam;
-
-    //private boolean _villainTeam;
-
+    /** The teams that are currently present in this game. */
     private Set<Team> _teams;
     /** The number of cards that belong in the middle. */
     public static final int NUM_CARDS_IN_MIDDLE = 3;
@@ -70,6 +60,9 @@ public class Game {
         villager, they lose, etc.) */
 
 
+    /** The set of house/alternate rules that are active. */
+    private Set<Rule> _houseRules;
+
 
     /** The role that the doppelganger card becomes. Assumes that there is a
      *  doppelganger in play, and shouldn't be accessed otherwise. */
@@ -86,11 +79,17 @@ public class Game {
     private static Game _app;
     /** The list of cards that are available for this game of ONUW. */
     private static List<Card> _cards;
+    /** The set of roles that are currently in the game. */
+    private static Set<Role> _roles;
 
     /** The private Game constructor. */
     private Game() {
+        _roles = new HashSet<Role>();
+        _houseRules = new HashSet<Rule>();
+        _teams = new HashSet<Team>();
         _players = new HashSet<Player>();
         _cards = new ArrayList<Card>();
+        _winningTeam = new HashSet<Team>();
     }
 
     /** A getter method that returns _app if it already exists, and creates it
@@ -103,6 +102,16 @@ public class Game {
             _app = new Game();
         }
         return _app;
+    }
+
+    /** A method that toggles the rule denoted "r" on. Returns false if the rule
+     *  was already in the set of rules, and true otherwise.
+     *
+     * @param r a rule
+     * @return false if the rule was already applied, and true otherwise
+     */
+    public boolean toggleRule(Rule r) {
+        return _houseRules.add(r);
     }
 
     /** A setter method that sets the players in this game.
@@ -179,7 +188,12 @@ public class Game {
         int index = 3;
         for (Player p: _players) {
             Card c = _cards.get(index);
-            _teams.add(c.getRole().getTeam());
+            Role r = c.getRole();
+            Team t = r.getTeam();
+            if (t != StandardTeam.NEUTRAL) {
+                _teams.add(t);
+            }
+            _roles.add(r);
             p.initCard(c);
             index++;
         }
@@ -204,38 +218,61 @@ public class Game {
             if (isEpic()) {
                 //TODO: Implement the logic for Epic Battles
             } else {
-                if (_teams.contains(StandardTeam.VILLAGE)) {
-                    boolean someoneNotEvilDied = false;
-                    boolean tannerDied = false;
-                    Set<Team> temp = new HashSet<Team>(_teams);
-                    temp.remove(StandardTeam.VILLAGE);
-                    Team evil = (Team) temp.toArray()[0];
+                Set<Team> died = new HashSet<Team>();
+                boolean villageExists = _teams.contains(StandardTeam.VILLAGE);
+                boolean tannerDied = false;
 
-                    for (Player p : _players) {
-                        if (!p.isAlive()) {
-                            Role finalRole = p.getFinalRole();
-                            if (finalRole.getTeam() != StandardTeam.VILLAGE
-                                && !finalRole.isSacrificial()) {
+                for (Player p : _players) {
+                    if (!p.isAlive()) {
+                        Role finalRole = p.getFinalRole();
+
+                        if (finalRole.getTeam() != StandardTeam.VILLAGE
+                            && !finalRole.isSacrificial()) {
+                            if (villageExists && !_houseRules.contains(
+                                HouseRule.NOVILLAGEDEATH)) {
                                 _winningTeam.add(StandardTeam.VILLAGE);
                                 break;
+                            } else {
+                                died.add(finalRole.getTeam());
                             }
-                            if (p.getFinalRole() == StandardRole.TANNER) {
+                        } else if (finalRole == StandardRole.TANNER
+                            || (finalRole == Bonus2Role.APPRENTICE_TANNER
+                            && !_roles.contains(StandardRole.TANNER))) {
+                            if (_houseRules.contains(HouseRule.TANNERONLY)) {
+                                _winningTeam.add(null);
+                                break;
+                            } else {
                                 tannerDied = true;
-                                //TODO: Fix this so that this also applies to lone apprentice tanner?
                             }
-                            someoneNotEvilDied = true;
+                        } else if (villageExists) {
+                            died.add(StandardTeam.VILLAGE);
                         }
                     }
+                }
 
-                    if (_winningTeam.size() == 0) {
-                        if (!tannerDied && someoneNotEvilDied){
-                            _winningTeam.add(evil);
-                        } else {
-                            _winningTeam.add(null); //No winner
+                if (_winningTeam.size() == 0) {
+                    if (died.isEmpty() && _teams.size() == 1
+                        && _teams.contains(StandardTeam.VILLAGE)) {
+                        _winningTeam.add(StandardTeam.VILLAGE);
+                    }
+                    if (_houseRules.contains(HouseRule.NOVILLAGEDEATH)) {
+                        if (!died.isEmpty() && !died.contains(StandardTeam.VILLAGE)) {
+                            _winningTeam.add(StandardTeam.VILLAGE);
                         }
                     }
-                } else {
-                    //TODO: Implement the logic for when the two teams are both evil/not village
+                    if (!tannerDied) {
+                        if (_houseRules.contains(HouseRule.EVILSMUSTKILL)
+                        && !died.isEmpty()) {
+                            if (_winningTeam.isEmpty()) {
+                                _winningTeam.add(null);
+                            }
+                        } else {
+                            _winningTeam.addAll(_teams);
+                            _winningTeam.removeAll(died);
+                        }
+                    } else {
+                        _winningTeam.add(null); //No winner (Or Tanner won)
+                    }
                 }
             }
         }
@@ -245,10 +282,12 @@ public class Game {
     /** A method that restarts the state of the game, setting everything back
      *  as if a completely new game were being started. */
     public void restart() {
+        _roles.clear();
+        _houseRules.clear();
         _teams.clear();
         _winningTeam.clear();
-        _players = new HashSet<Player>();
-        _cards = new ArrayList<Card>();
+        _players.clear();
+        _cards.clear();
         _gameOver = false;
     }
 }

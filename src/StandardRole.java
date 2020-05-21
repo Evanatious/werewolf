@@ -7,32 +7,24 @@
 public enum StandardRole implements Role {
     DOPPELGANGER("Doppelganger", null) {
         //FIXME, also team should not be null, we will figure it out
-    },
-    WEREWOLF("Werewolf", StandardTeam.WEREWOLF) {
+    }, WEREWOLF("Werewolf", StandardTeam.WEREWOLF) {
 
-    },
-    MINION("Minion", StandardTeam.WEREWOLF) {
+    }, MINION("Minion", StandardTeam.WEREWOLF) {
         @Override
         public boolean isSacrificial() {
             return true;
         }
-    },
-    MASON("Mason", StandardTeam.VILLAGE) {
+    }, MASON("Mason", StandardTeam.VILLAGE) {
 
-    },
-    SEER("Seer", StandardTeam.VILLAGE) {
+    }, SEER("Seer", StandardTeam.VILLAGE) {
 
-    },
-    ROBBER("Robber", StandardTeam.VILLAGE) {
+    }, ROBBER("Robber", StandardTeam.VILLAGE) {
 
-    },
-    TROUBLEMAKER("Troublemaker", StandardTeam.VILLAGE) {
+    }, TROUBLEMAKER("Troublemaker", StandardTeam.VILLAGE) {
 
-    },
-    DRUNK("Drunk", StandardTeam.VILLAGE) {
+    }, DRUNK("Drunk", StandardTeam.VILLAGE) {
 
-    },
-    INSOMNIAC("Insomniac", StandardTeam.VILLAGE) {
+    }, INSOMNIAC("Insomniac", StandardTeam.VILLAGE) {
 
     },
     VILLAGER("Villager", StandardTeam.VILLAGE),
@@ -73,11 +65,6 @@ public enum StandardRole implements Role {
     }
 
     @Override
-    public void doAction(Game game) {
-
-    }
-
-    @Override
     public Team getTeam() {
         return _team;
     }
@@ -85,10 +72,5 @@ public enum StandardRole implements Role {
     @Override
     public String getName() {
         return _name;
-    }
-
-    @Override
-    public boolean isSacrificial() {
-        return false;
     }
 }

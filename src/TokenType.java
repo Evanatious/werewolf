@@ -7,7 +7,9 @@ public interface TokenType {
      *
      * @param game the Game to which this status should be applied on
      */
-    void applyStatus(Game game);
+    default void applyStatus(Game game) {
+
+    };
 
     /** A getter method that returns the name of this token.
      *

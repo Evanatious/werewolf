@@ -7,7 +7,9 @@ public interface Role {
      *
      * @param game the Game to which this role should perform its action on
      */
-    void doAction(Game game);
+    default void doAction(Game game) {
+
+    };
 
     /** A getter method that returns what team this role belongs to.
      *
@@ -28,7 +30,9 @@ public interface Role {
      *
      * @return true if this role is sacrificial, and false otherwise
      */
-    boolean isSacrificial();
+    default boolean isSacrificial() {
+        return false;
+    };
 
     /*
     boolean isSwapper(); //FIXME: Maybe?

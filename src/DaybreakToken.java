@@ -26,21 +26,6 @@ public enum DaybreakToken implements TokenType {
         _name = name;
     }
 
-    /**
-     * Apply this token's specified status.
-     *
-     * @param game the Game to which this status should be applied on
-     */
-    @Override
-    public void applyStatus(Game game) {
-
-    }
-
-    /**
-     * A getter method that returns the name of this token.
-     *
-     * @return the name of this token
-     */
     @Override
     public String getName() {
         return _name;

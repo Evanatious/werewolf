@@ -64,11 +64,6 @@ public enum DaybreakRole implements Role {
     }
 
     @Override
-    public void doAction(Game game) {
-
-    }
-
-    @Override
     public Team getTeam() {
         return _team;
     }
@@ -76,10 +71,5 @@ public enum DaybreakRole implements Role {
     @Override
     public String getName() {
         return _name;
-    }
-
-    @Override
-    public boolean isSacrificial() {
-        return false;
     }
 }
