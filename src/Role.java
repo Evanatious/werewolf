@@ -20,4 +20,17 @@ public interface Role {
      * @return the name of this role
      */
     String getName();
+
+    /** A getter method that returns true if this role is sacrificial, and
+     *  false otherwise. A sacrificial role is defined as a role whose team
+     *  is not Village, and whose team wins even if the player with the role
+     *  dies.
+     *
+     * @return true if this role is sacrificial, and false otherwise
+     */
+    boolean isSacrificial();
+
+    /*
+    boolean isSwapper(); //FIXME: Maybe?
+     */
 }

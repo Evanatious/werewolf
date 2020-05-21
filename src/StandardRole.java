@@ -8,35 +8,38 @@ public enum StandardRole implements Role {
     DOPPELGANGER("Doppelganger", null) {
         //FIXME, also team should not be null, we will figure it out
     },
-    WEREWOLF("Werewolf", StandardTeams.WEREWOLF) {
+    WEREWOLF("Werewolf", StandardTeam.WEREWOLF) {
 
     },
-    MINION("Minion", StandardTeams.WEREWOLF) {
+    MINION("Minion", StandardTeam.WEREWOLF) {
+        @Override
+        public boolean isSacrificial() {
+            return true;
+        }
+    },
+    MASON("Mason", StandardTeam.VILLAGE) {
 
     },
-    MASON("Mason", StandardTeams.VILLAGE) {
+    SEER("Seer", StandardTeam.VILLAGE) {
 
     },
-    SEER("Seer", StandardTeams.VILLAGE) {
+    ROBBER("Robber", StandardTeam.VILLAGE) {
 
     },
-    ROBBER("Robber", StandardTeams.VILLAGE) {
+    TROUBLEMAKER("Troublemaker", StandardTeam.VILLAGE) {
 
     },
-    TROUBLEMAKER("Troublemaker", StandardTeams.VILLAGE) {
+    DRUNK("Drunk", StandardTeam.VILLAGE) {
 
     },
-    DRUNK("Drunk", StandardTeams.VILLAGE) {
+    INSOMNIAC("Insomniac", StandardTeam.VILLAGE) {
 
     },
-    INSOMNIAC("Insomniac", StandardTeams.VILLAGE) {
+    VILLAGER("Villager", StandardTeam.VILLAGE),
+    HUNTER("Hunter", StandardTeam.VILLAGE) {
 
     },
-    VILLAGER("Villager", StandardTeams.VILLAGE),
-    HUNTER("Hunter", StandardTeams.VILLAGE) {
-
-    },
-    TANNER("Tanner", StandardTeams.NEUTRAL);
+    TANNER("Tanner", StandardTeam.NEUTRAL);
 
     /** The name of the role. */
     private String _name;
@@ -82,5 +85,10 @@ public enum StandardRole implements Role {
     @Override
     public String getName() {
         return _name;
+    }
+
+    @Override
+    public boolean isSacrificial() {
+        return false;
     }
 }
