@@ -5,30 +5,30 @@
  * @author Evan Gao
  */
 public enum DaybreakRole implements Role {
-    SENTINEL("Sentinel", StandardTeams.VILLAGE) {
+    SENTINEL("Sentinel", StandardTeam.VILLAGE) {
 
-    }, ALPHA_WOLF("Alpha Wolf", StandardTeams.WEREWOLF) {
+    }, ALPHA_WOLF("Alpha Wolf", StandardTeam.WEREWOLF) {
 
-    }, MYSTIC_WOLF("Mystic Wolf", StandardTeams.WEREWOLF) {
+    }, MYSTIC_WOLF("Mystic Wolf", StandardTeam.WEREWOLF) {
 
-    }, APPRENTICE_SEER("Apprentice Seer", StandardTeams.VILLAGE) {
+    }, APPRENTICE_SEER("Apprentice Seer", StandardTeam.VILLAGE) {
 
-    }, PI("Paranormal Investigator", StandardTeams.VILLAGE) {
+    }, PI("Paranormal Investigator", StandardTeam.VILLAGE) {
         //TODO: BRUH HE HAS TO SWITCH ROLES
-    }, WITCH("Witch", StandardTeams.VILLAGE) {
+    }, WITCH("Witch", StandardTeam.VILLAGE) {
         //TODO: She swaps cards, luckily that's easier to implement than PI
         //Since promptPlayerAction doesn't allow for you to choose yourself,
         //there will need to be a special button/function for the witch to
         //choose herself.
-    }, VILLAGE_IDIOT("Village Idiot", StandardTeams.VILLAGE) {
+    }, VILLAGE_IDIOT("Village Idiot", StandardTeam.VILLAGE) {
 
-    }, REVEALER("Revealer", StandardTeams.VILLAGE) {
+    }, REVEALER("Revealer", StandardTeam.VILLAGE) {
 
-    }, CURATOR("Curator", StandardTeams.VILLAGE) {
+    }, CURATOR("Curator", StandardTeam.VILLAGE) {
 
-    }, DREAM_WOLF("Dream Wolf", StandardTeams.WEREWOLF) {
+    }, DREAM_WOLF("Dream Wolf", StandardTeam.WEREWOLF) {
 
-    }, BODYGUARD("Bodyguard", StandardTeams.VILLAGE) {
+    }, BODYGUARD("Bodyguard", StandardTeam.VILLAGE) {
 
     };
 
@@ -76,5 +76,10 @@ public enum DaybreakRole implements Role {
     @Override
     public String getName() {
         return _name;
+    }
+
+    @Override
+    public boolean isSacrificial() {
+        return false;
     }
 }
