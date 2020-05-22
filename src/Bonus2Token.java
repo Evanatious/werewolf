@@ -1,4 +1,8 @@
-
+/** An enum to represent and store the tokens in Bonus Pack 2:
+ *  Mist of the Vampire, and Dagger of the Traitor.
+ *
+ * @author Evan Gao
+ */
 public enum Bonus2Token implements TokenType {
     VAMPIRE("Mist of the Vampire") {
 

@@ -73,9 +73,12 @@ public class Player {
      * @param numPlayers the number of players that will be selected
      * @return the Player(s) that this player chooses
      */
-    public Player[] promptChoosePlayerAction(String message, int numPlayers) {
+    public Player[] promptChoosePlayerAction(String message, int numPlayers,
+                                             boolean selfAllowed) {
         HashSet<Object> playerPool = new HashSet<Object>(_game.getPlayers());
-        playerPool.remove(this);
+        if (!selfAllowed) {
+            playerPool.remove(this);
+        }
         return Arrays.copyOf(choose(playerPool, numPlayers),
             numPlayers, Player[].class);
     }

@@ -41,8 +41,7 @@ public class Game {
     private boolean usingBonus3;
      */
 
-    /** The teams that are currently present in this game. */
-    private Set<Team> _teams;
+
     /** The number of cards that belong in the middle. */
     public static final int NUM_CARDS_IN_MIDDLE = 3;
     /** The minimum number of players a game can have. */
@@ -67,8 +66,10 @@ public class Game {
     /** The role that the doppelganger card becomes. Assumes that there is a
      *  doppelganger in play, and shouldn't be accessed otherwise. */
     private Role _doppelRole; //TODO: Might need one for every role that changes roles without swapping cards, like copycat and body snatcher
-    /** The set of players in this game. */
-    private Set<Player> _players;
+    /** The set of players in this game. They are ordered in order of their
+     *  initial role priority, unless the role is a changeling, in which case
+     *  their order is dynamically changed as a result of the change. */
+    private SortedSet<Player> _players;
     /** The three center cards. */
     private Card[] _middle;
     /** The state of the game. */
@@ -79,15 +80,36 @@ public class Game {
     private static Game _app;
     /** The list of cards that are available for this game of ONUW. */
     private static List<Card> _cards;
-    /** The set of roles that are currently in the game. */
+    /** The teams that are currently present in this game. */
+    private Set<Team> _teams;
+    /** The set of roles that are currently in the game. (Note, sacrificial
+     *  roles do not count toward a role in this game.)*/
     private static Set<Role> _roles;
+
+
+    /** A helper method that returns the priority of a player in terms of the
+     *  order in which their role takes their turn in the process of the game.
+     *  The lower the number, the higher the priority.
+     *
+     * @param p a Player
+     * @return an integer that corresponds to this player's priority in the
+     * turn order
+     */
+    public static int getPriority(Player p) {
+        return 0; //FIXME
+    }
+
+    /** A comparator that compares two Players based on their order in which
+     *  their role takes turns in the process of the game. */
+    private static final Comparator<Player> ROLE_ORDER =
+        Comparator.comparingInt(Game::getPriority);
 
     /** The private Game constructor. */
     private Game() {
         _roles = new HashSet<Role>();
         _houseRules = new HashSet<Rule>();
         _teams = new HashSet<Team>();
-        _players = new HashSet<Player>();
+        _players = new TreeSet<Player>(ROLE_ORDER); //TODO: Need to see if the comparator works the way it does with addAll
         _cards = new ArrayList<Card>();
         _winningTeam = new HashSet<Team>();
     }
@@ -104,34 +126,50 @@ public class Game {
         return _app;
     }
 
-    /** A method that toggles the rule denoted "r" on. Returns false if the rule
-     *  was already in the set of rules, and true otherwise.
+    /** A getter method that returns the set of all alternate/house rules that
+     *  are currently applied in this game.
+     *
+     * @return the set of all alternate/house rules that are currently applied
+     */
+    public Set<Rule> getHouseRules() {
+        return _houseRules;
+    }
+
+    /** A method that toggles the rule denoted "r" on if it is off, and off if
+     *  it is on. Returns false if the rule is now toggled off, and true
+     *  otherwise.
      *
      * @param r a rule
-     * @return false if the rule was already applied, and true otherwise
+     * @return false if the rule is now toggled off, and true otherwise
      */
     public boolean toggleRule(Rule r) {
-        return _houseRules.add(r);
+        boolean result = _houseRules.add(r);
+        if (result) {
+            _houseRules.remove(r);
+        }
+        return result;
     }
 
     /** A setter method that sets the players in this game.
      *
      * @param players a set containing the players in this game
+     * @result true if the set of players has changed, and false otherwise
      */
-    public void setPlayers(Set<Player> players) {
+    public boolean setPlayers(Set<Player> players) {
         assert players.size() >= MIN_NUM_PLAYERS
             && players.size() <= DEFAULT_CARDS.size() - NUM_CARDS_IN_MIDDLE;
-        _players = new HashSet<Player>(players);
+        return _players.addAll(players);
     }
 
     /** A setter method that sets the cards in this game. Assumes that cards is
      *  taken from DEFAULT_CARDS (for now).
      *
      * @param cards a list containing the cards in this game
+     * @return true if the set of cards has changed, and false otherwise
      */
-    public void setCards(List<Card> cards) {
+    public boolean setCards(List<Card> cards) {
         assert cards.size() == _players.size() + NUM_CARDS_IN_MIDDLE;
-        _cards = new ArrayList<Card>(cards);
+        return _cards.addAll(cards);
     }
 
     /** A getter method that returns the set of players in this game.
@@ -190,13 +228,17 @@ public class Game {
             Card c = _cards.get(index);
             Role r = c.getRole();
             Team t = r.getTeam();
-            if (t != StandardTeam.NEUTRAL) {
-                _teams.add(t);
+            if (t != StandardTeam.NEUTRAL && !r.isSacrificial()) {
+                _teams.add(t); //FIXME: Doesn't account for a Copycat that might become something in the center
             }
             _roles.add(r);
             p.initCard(c);
             index++;
         }
+
+        Set<Player> withoutRoles = new HashSet<Player>(_players);
+        _players.clear();
+        _players.addAll(withoutRoles); //TODO: Check that this works as intended with the comparator
     }
 
     /** A getter method that returns the state of this game.
@@ -227,7 +269,7 @@ public class Game {
                         Role finalRole = p.getFinalRole();
 
                         if (finalRole.getTeam() != StandardTeam.VILLAGE
-                            && !finalRole.isSacrificial()) {
+                            && !finalRole.isSacrificial()) { //died will not be affected by sacrificial roles
                             if (villageExists && !_houseRules.contains(
                                 HouseRule.NOVILLAGEDEATH)) {
                                 _winningTeam.add(StandardTeam.VILLAGE);

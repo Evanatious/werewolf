@@ -9,7 +9,7 @@ public interface TokenType {
      */
     default void applyStatus(Game game) {
 
-    };
+    }
 
     /** A getter method that returns the name of this token.
      *

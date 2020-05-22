@@ -6,7 +6,15 @@
  */
 public enum StandardRole implements Role {
     DOPPELGANGER("Doppelganger", null) {
-        //FIXME, also team should not be null, we will figure it out
+        @Override
+        public boolean isChangeling() {
+            return true;
+        }
+
+        @Override
+        public void doAction(Game game, Player currPlayer) {
+
+        }
     }, WEREWOLF("Werewolf", StandardTeam.WEREWOLF) {
 
     }, MINION("Minion", StandardTeam.WEREWOLF) {
@@ -42,22 +50,6 @@ public enum StandardRole implements Role {
     StandardRole(String name, Team team) {
         _name = name;
         _team = team;
-    }
-
-    /** A helper method that finds the player with the specified role in the
-     *  given game.
-     *
-     * @param game the game to look for the player in
-     * @param role the role of the player to look for
-     * @return the player with the specified role in the given game
-     */
-    private static Player findPlayer(Game game, Role role) {
-        for (Player p: game.getPlayers()) {
-            if (p.getInitRole() == role) {
-                return p;
-            }
-        }
-        return null; //Should never reach this line;
     }
 
     private static void findRole(Game game, Role role) {
