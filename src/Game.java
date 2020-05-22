@@ -51,12 +51,6 @@ public class Game {
     public static final int EPIC_BATTLE_NUM = 3;
 
     //TODO: Implement time limits between moves, etc.
-    /*TODO: Implement alternate rules
-       (EX: If Tanner dies, they alone win. If there are multiple Tanners, they
-        both win if one is killed. If there is a lone minion with no werewolves,
-        the minion becomes a lone werewolf and can look at the center card. If
-        there is a lone minion, reshuffle (same idea-ish). If villagers kill a
-        villager, they lose, etc.) */
 
 
     /** The set of house/alternate rules that are active. */
