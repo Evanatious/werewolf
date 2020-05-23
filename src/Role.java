@@ -63,7 +63,17 @@ public interface Role {
      */
     default Role getFinalRole() {
         return this;
-    };
+    }
+
+    /** A getter method that returns true if this role has an alternate win
+     *  condition, and false otherwise.
+     *
+     * @return true if this role has an alternate win condition, and false
+     * otherwise
+     */
+    default boolean hasAlternateWinCon() {
+        return false;
+    }
 
      /** A helper method that finds the player with the specified role in the
      *  given game. Assumes that there is a player with the specified role.

@@ -1,3 +1,7 @@
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.TreeMultimap;
+
+import java.io.Serializable;
 import java.util.*;
 
 /** A class that represents a game of ONUW. It is a singleton class (there
@@ -57,10 +61,8 @@ public class Game {
     private Set<Rule> _houseRules;
 
 
-    /** The set of players in this game. They are ordered in order of their
-     *  initial role priority, unless the role is a changeling, in which case
-     *  their order is dynamically changed as a result of the change. */
-    private SortedSet<Player> _players; //FIXME: Unfortunately, this list will change its order due to changeling roles...HOW TO FIX THE ISSUE OF MODIFYING A COLLECTION WHILE IT IS BEING ITERATED
+    /** The list of players in this game. */
+    private List<Player> _players;
     /** The three center cards. */
     private Card[] _middle;
     /** The state of the game. */
@@ -71,38 +73,68 @@ public class Game {
     private static Game _app;
     /** The list of cards that are available for this game of ONUW. */
     private static List<Card> _cards;
-    /** The teams that are currently present in this game. */
+    /** The teams that are currently present in this game. (Note, sacrificial
+     *  roles do not count toward a role in this game.) */
     private Set<Team> _teams;
-    /** The set of roles that are currently in the game. (Note, sacrificial
-     *  roles do not count toward a role in this game.)*/
-    private static Set<Role> _roles;
+    /** The mapping of roles that are currently in this game to the players in
+     *  this game that have that role. This changes dynamically when changeling
+     *  roles change roles (except for certain cases where the changeling
+     *  performs their new role immediately. This mapping helps to decide the
+     *  turn order in this game. */
+    private static TreeMultimap<Role, Player> _rolesToPlayers;
 
+    public static void duskPhase() {
+        //TODO: Maybe unnecessary, or can be a helper method for nightPhase
+    }
 
-    /** A helper method that returns the priority of a player in terms of the
-     *  order in which their role takes their turn in the process of the game.
+    public static void nightPhase() {
+        //TODO
+    }
+
+    public static void morningPhase() {
+        //TODO
+    }
+
+    /** A helper method that returns the priority of a role in terms of the
+     *  order in which the role takes their turn in the process of the game.
      *  The lower the number, the higher the priority.
      *
-     * @param p a Player
-     * @return an integer that corresponds to this player's priority in the
+     * @param r a Role
+     * @return an integer that corresponds to this role's priority in the
      * turn order
      */
-    public static int getPriority(Player p) {
+    public static float getPriority(Role r) {
         return 0; //FIXME
     }
 
+    /** A comparator that compares two Roles based on their order in which
+     *  the role takes turns in the process of the game. NOTE: This is
+     *  inconsistent with .equals, because in enums , .equals is final, but
+     *  changeling roles might be different roles, and still be considered
+     *  equal. */
+    private static final Comparator<Role> ROLE_COMPARATOR =
+        (o1, o2) -> (int) (getPriority(o1) - getPriority(o2)) * 10;
+
+    //So...a doppelganger-role has LOWER priority than the actual role (i.e. they go directly after the actual role)
+
     /** A comparator that compares two Players based on their order in which
-     *  their role takes turns in the process of the game. */
-    private static final Comparator<Player> ROLE_ORDER =
-        Comparator.comparingInt(Game::getPriority);
+     *  their role takes turns in the process of the game. NOTE: This is
+     *  inconsistent with .equals, because in enums , .equals is final, but
+     *  changeling roles might be different roles, and still be considered
+     *  equal. */
+    private static final Comparator<Player> PLAYER_COMPARATOR = (o1, o2) ->
+        (int) (getPriority(o1.getInitRole()) -
+            getPriority(o2.getInitRole())) * 10;
 
     /** The private Game constructor. */
     private Game() {
-        _roles = new HashSet<Role>();
-        _houseRules = new HashSet<Rule>();
-        _teams = new HashSet<Team>();
-        _players = new TreeSet<Player>(ROLE_ORDER); //TODO: Need to see if the comparator works the way it does with addAll
-        _cards = new ArrayList<Card>();
-        _winningTeam = new HashSet<Team>();
+        _rolesToPlayers =
+            TreeMultimap.create(ROLE_COMPARATOR, PLAYER_COMPARATOR);
+        _houseRules = new HashSet<>();
+        _teams = new HashSet<>();
+        _players = new ArrayList<>();
+        _cards = new ArrayList<>();
+        _winningTeam = new HashSet<>();
     }
 
     /** A getter method that returns _app if it already exists, and creates it
@@ -163,11 +195,11 @@ public class Game {
         return _cards.addAll(cards);
     }
 
-    /** A getter method that returns the set of players in this game.
+    /** A getter method that returns the list of players in this game.
      *
-     * @return the set of players in this game
+     * @return the list of players in this game
      */
-    public Set<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return _players;
     }
 
@@ -222,14 +254,10 @@ public class Game {
             if (t != StandardTeam.NEUTRAL && !r.isSacrificial()) {
                 _teams.add(t); //FIXME: Doesn't account for a Copycat that might become something in the center...Might fix on the spot when the copycat takes their role
             }
-            _roles.add(r);
+            _rolesToPlayers.put(r, p);
             p.initCard(c);
             index++;
         }
-
-        Set<Player> withoutRoles = new HashSet<Player>(_players);
-        _players.clear();
-        _players.addAll(withoutRoles); //TODO: Check that this works as intended with the comparator
     }
 
     /** A getter method that returns the state of this game.
@@ -251,7 +279,7 @@ public class Game {
             if (isEpic()) {
                 //TODO: Implement the logic for Epic Battles
             } else {
-                Set<Team> died = new HashSet<Team>();
+                Set<Team> died = new HashSet<>();
                 boolean villageExists = _teams.contains(StandardTeam.VILLAGE);
                 boolean tannerDied = false;
 
@@ -270,7 +298,7 @@ public class Game {
                             }
                         } else if (finalRole == StandardRole.TANNER
                             || (finalRole == Bonus2Role.APPRENTICE_TANNER
-                            && !_roles.contains(StandardRole.TANNER))) {
+                            && !_rolesToPlayers.containsKey(StandardRole.TANNER))) {
                             if (_houseRules.contains(HouseRule.TANNERONLY)) {
                                 _winningTeam.add(null);
                                 break;
@@ -315,7 +343,7 @@ public class Game {
     /** A method that restarts the state of the game, setting everything back
      *  as if a completely new game were being started. */
     public void restart() {
-        _roles.clear();
+        _rolesToPlayers.clear();
         _houseRules.clear();
         _teams.clear();
         _winningTeam.clear();

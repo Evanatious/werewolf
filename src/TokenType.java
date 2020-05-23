@@ -16,4 +16,14 @@ public interface TokenType {
      * @return the name of this token
      */
     String getName();
+
+    /** A getter method that returns true if this token is visible to other
+     *  players (like the Shield token), and false otherwise.
+     *
+     * @return true if this token is visible to other players, and false
+     * otherwise
+     */
+    default boolean isVisible() {
+        return false;
+    };
 }

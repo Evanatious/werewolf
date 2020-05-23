@@ -1,5 +1,7 @@
 /** An enum to represent and store the roles in a game of One Night Ultimate
- *  Vampire: FIXME
+ *  Vampire: Copycat, Vampire, The Count, The Master, Renfield, Diseased, Cupid,
+ *  Instigator, Priest, Assassin, Apprentice Assassin, Marksman, Pickpocket,
+ *  and Gremlin.
  *
  * @author Evan Gao
  */
@@ -9,6 +11,46 @@ public enum VampireRole implements Role {
         public boolean isChangeling() {
             return true;
         }
+    }, VAMPIRE("Vampire", VampireTeam.VAMPIRE) {
+
+    }, COUNT("The Count", VampireTeam.VAMPIRE) {
+
+    }, MASTER("The Master", VampireTeam.VAMPIRE) {
+
+    }, RENFIELD("Renfield", VampireTeam.VAMPIRE) {
+        @Override
+        public boolean isSacrificial() {
+            return true;
+        }
+
+        @Override
+        public boolean hasAlternateWinCon() {
+            return true;
+        }
+    }, DISEASED("Diseased", StandardTeam.VILLAGE) {
+
+    }, CUPID("Cupid", StandardTeam.VILLAGE) {
+
+    }, INSTIGATOR("Instigator", StandardTeam.VILLAGE) {
+
+    }, PRIEST("Priest", StandardTeam.VILLAGE) {
+
+    }, ASSASSIN("Assassin", StandardTeam.NEUTRAL) {
+        @Override
+        public boolean hasAlternateWinCon() {
+            return true;
+        }
+    }, APPRENTICE_ASSASSIN("Apprentice Assassin", StandardTeam.NEUTRAL) {
+        @Override
+        public boolean hasAlternateWinCon() {
+            return true;
+        }
+    }, MARKSMAN("Marksman", StandardTeam.VILLAGE) {
+
+    }, PICKPOCKET("Pickpocket", StandardTeam.VILLAGE) {
+
+    }, GREMLIN("Gremlin", StandardTeam.VILLAGE) {
+
     };
 
     public static final String COPYCAT_MESSAGE = "Copycat, wake up and look at "

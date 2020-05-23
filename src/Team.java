@@ -5,4 +5,7 @@
  * @author Evan Gao
  */
 public interface Team {
+    default void doNothing() {
+
+    };
 }
