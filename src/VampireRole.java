@@ -1,3 +1,8 @@
+/** An enum to represent and store the roles in a game of One Night Ultimate
+ *  Vampire: FIXME
+ *
+ * @author Evan Gao
+ */
 public enum VampireRole implements Role {
     COPYCAT("Copycat", StandardTeam.NEUTRAL) {
         @Override

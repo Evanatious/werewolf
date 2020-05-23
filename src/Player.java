@@ -178,7 +178,7 @@ public class Player {
      * game
      */
     public Role getFinalRole() {
-        return getCard().getRole();
+        return getCard().getRole().getFinalRole();
     }
 
     /** A getter method that returns this player's role at the start of the game.

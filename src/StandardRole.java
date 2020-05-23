@@ -5,7 +5,7 @@
  * @author Evan Gao
  */
 public enum StandardRole implements Role {
-    DOPPELGANGER("Doppelgänger", null) {
+    DOPPELGANGER("Doppelgänger", StandardTeam.NEUTRAL) {
         @Override
         public boolean isChangeling() {
             return true;

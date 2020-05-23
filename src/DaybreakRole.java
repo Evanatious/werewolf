@@ -36,8 +36,6 @@ public enum DaybreakRole implements Role {
     private String _name;
     /** The team that this role belongs to. */
     private Team _team;
-    /** The new role that the original role changed into. */
-    private Role _newRole;
 
     /** The constructor for a StandardRole object. */
     DaybreakRole(String name, Team team) {
@@ -73,14 +71,5 @@ public enum DaybreakRole implements Role {
     @Override
     public String getName() {
         return _name;
-    }
-
-    @Override
-    public Role getFinalRole() {
-        if (isChangeling()) {
-            return _newRole.getFinalRole();
-        } else {
-            return this;
-        }
     }
 }

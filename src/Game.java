@@ -57,13 +57,10 @@ public class Game {
     private Set<Rule> _houseRules;
 
 
-    /** The role that the doppelganger card becomes. Assumes that there is a
-     *  doppelganger in play, and shouldn't be accessed otherwise. */
-    private Role _doppelRole; //TODO: Might need one for every role that changes roles without swapping cards, like copycat and body snatcher
     /** The set of players in this game. They are ordered in order of their
      *  initial role priority, unless the role is a changeling, in which case
      *  their order is dynamically changed as a result of the change. */
-    private SortedSet<Player> _players;
+    private SortedSet<Player> _players; //FIXME: Unfortunately, this list will change its order due to changeling roles...HOW TO FIX THE ISSUE OF MODIFYING A COLLECTION WHILE IT IS BEING ITERATED
     /** The three center cards. */
     private Card[] _middle;
     /** The state of the game. */
@@ -223,7 +220,7 @@ public class Game {
             Role r = c.getRole();
             Team t = r.getTeam();
             if (t != StandardTeam.NEUTRAL && !r.isSacrificial()) {
-                _teams.add(t); //FIXME: Doesn't account for a Copycat that might become something in the center
+                _teams.add(t); //FIXME: Doesn't account for a Copycat that might become something in the center...Might fix on the spot when the copycat takes their role
             }
             _roles.add(r);
             p.initCard(c);

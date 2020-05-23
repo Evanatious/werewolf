@@ -56,12 +56,14 @@ public interface Role {
         return false;
     }
 
-    /** A getter method that returns the role that this role has changed into.
-     *  Assumes that this rule is a changeling.
+    /** A getter method that returns the final role of this role (this may be
+     *  different than the role on the card because of changelings).
      *
-     * @return the role that this role has changed into
+     * @return the final role that this role is
      */
-    Role getFinalRole();
+    default Role getFinalRole() {
+        return this;
+    };
 
      /** A helper method that finds the player with the specified role in the
      *  given game. Assumes that there is a player with the specified role.
