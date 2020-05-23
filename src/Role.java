@@ -36,14 +36,32 @@ public interface Role {
     }
 
     /** A getter method that returns true if this role is a changeling, and
-     *  false otherwise. A changeling role is defined as a role changes, while
-     *  the card remains the same.
+     *  false otherwise. A changeling role is defined as a role that becomes a
+     *  different role, while the card remains the same.
      *
      * @return true if this role is sacrificial, and false otherwise
      */
     default boolean isChangeling() {
         return false;
     }
+
+    /** A getter method that returns true if this role performs their action
+     *  immediately when a changeling changes into this role, and false
+     *  otherwise.
+     *
+     * @return true if this role performs their action immediately when a
+     * changeling changes into this role, and false otherwise.
+     */
+    default boolean performImmediately() {
+        return false;
+    }
+
+    /** A getter method that returns the role that this role has changed into.
+     *  Assumes that this rule is a changeling.
+     *
+     * @return the role that this role has changed into
+     */
+    Role getFinalRole();
 
      /** A helper method that finds the player with the specified role in the
      *  given game. Assumes that there is a player with the specified role.

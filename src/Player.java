@@ -8,7 +8,9 @@ public class Player {
     /** The name of this player. */
     private String _name;
     /** The initial role (that is, the role that this player starts off with) of
-     * this player. */
+     *  this player. This role determines when a player takes their action, even
+     *  if their card has been changed. When a changeling changes roles,
+     *  _initRole also changes to reflect that. */
     private Role _initRole;
     /** The card that this player possesses. */
     private Card _card;
@@ -159,13 +161,24 @@ public class Player {
         return _name;
     }
 
+    /** A setter method that sets this player's role to the indicated role.
+     *  Assumes that this player's card is a changeling.
+     *
+     * @param newRole the role this player now becomes
+     */
+    public void swapRole(Role newRole) {
+        assert _card.getRole().isChangeling();
+        _initRole = newRole;
+    }
+
+
     /** A getter method that returns this player's role at the end of the game.
      *
      * @return the role dictated by the card this player has at the end of the
      * game
      */
     public Role getFinalRole() {
-        return _card.getRole();
+        return getCard().getRole();
     }
 
     /** A getter method that returns this player's role at the start of the game.

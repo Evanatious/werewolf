@@ -8,5 +8,6 @@ public enum HouseRule implements Rule {
     TANNERTEAM, //If a Tanner dies, all Tanners win
     MINIONBECOMESWW, //If there is a lone minion, they "become" a lone werewolf and can look at one of the center cards
     NOVILLAGEDEATH, //Villagers lose if a villager is killed
+    DOPPELCAT, //If a Doppelganger views a Copycat card, they do the copycat action and then immediately do that new role's action as well
     EVILSMUSTKILL; //Non-villagers lose if no one is killed
 }

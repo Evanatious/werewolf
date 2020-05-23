@@ -22,6 +22,8 @@ public enum Bonus2Role implements Role {
     private String _name;
     /** The team that this role belongs to. */
     private Team _team;
+    /** The new role that the original role changed into. */
+    private Role _newRole;
 
     /** The constructor for a StandardRole object. */
     Bonus2Role(String name, Team team) {
@@ -31,11 +33,20 @@ public enum Bonus2Role implements Role {
 
     @Override
     public Team getTeam() {
-        return null;
+        return _team;
     }
 
     @Override
     public String getName() {
-        return null;
+        return _name;
+    }
+
+    @Override
+    public Role getFinalRole() {
+        if (isChangeling()) {
+            return _newRole.getFinalRole();
+        } else {
+            return this;
+        }
     }
 }
