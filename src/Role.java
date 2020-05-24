@@ -90,4 +90,14 @@ public interface Role {
         }
         return null; //Should never reach this line;
     }
+
+    /** A getter method that returns the phase during which this role operates.
+     *
+     * @return the phase during which this role operates
+     */
+    default Phase getPhase() {
+        return StandardPhase.NONE;
+    }
+
+    //default void changeTeam(); ?? TODO: Maybe implement a way to change a team, since so many roles have an initial team but can easily switch teams
 }

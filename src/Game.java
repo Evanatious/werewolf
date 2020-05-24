@@ -83,15 +83,19 @@ public class Game {
      *  turn order in this game. */
     private static TreeMultimap<Role, Player> _rolesToPlayers;
 
+    public static void earlyPhase() {
+        //TODO: Maybe unnecessary, or can be a helper method for nightPhase
+    }
+
     public static void duskPhase() {
         //TODO: Maybe unnecessary, or can be a helper method for nightPhase
     }
 
     public static void nightPhase() {
-        //TODO
+        //TODO: Might combine all these phases into one general method that can take in any phase
     }
 
-    public static void morningPhase() {
+    public static void votingPhase() {
         //TODO
     }
 
@@ -228,7 +232,7 @@ public class Game {
      */
     private boolean isEpic() {
         return _teams.size() >= EPIC_BATTLE_NUM;
-    }
+    } //TODO: Figure out what to do about the hero team
 
     /** Sets up this game. Shuffles all the given cards. Then, sets the middle
      *  cards, and distributes the rest of the cards to the players (one card

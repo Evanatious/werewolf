@@ -2,9 +2,9 @@ import java.util.*;
 
 /** A class that represents a player in ONUW.
  *
- * @authoer Evan Gao
+ * @author Evan Gao
  */
-public class Player implements Comparable {
+public class Player {
     /** The name of this player. */
     private String _name;
     /** The initial role (that is, the role that this player starts off with) of
@@ -14,6 +14,8 @@ public class Player implements Comparable {
     private Role _initRole;
     /** The card that this player possesses. */
     private Card _card;
+    /** The set of tokens this player possesses. */
+    private Set<Token> _tokens;
     /** The status of this player's mortality. */
     private boolean _alive;
     /** The game that this player is a part of. */
@@ -27,6 +29,7 @@ public class Player implements Comparable {
     public Player(String name, Game game) {
         _name = name;
         _game = game;
+        _tokens = new HashSet<>();
         _alive = true;
     }
 
@@ -48,6 +51,23 @@ public class Player implements Comparable {
      */
     public boolean promptMayAction(String message) {
         return true; //FIXME
+    }
+
+    /** Adds the provided token to the set of tokens this player possesses.
+     *
+     * @param t a token
+     */
+    public void receiveToken(Token t) {
+        _tokens.add(t);
+    }
+
+    public void swapMark(Token markToken) {
+        //TODO: Maybe try and do a more general swapToken method
+        //Assumes that there is only one of each kind of token (i.e. one artifact, one mark, one whatever new tokens there are)
+        //At the point in the game where this is called, each player should only have one token, their mark (at least according to the current rules, who knows what new stuff will be added)
+        assert _tokens.size() == 1;
+        _tokens.clear();
+        _tokens.add(markToken);
     }
 
     /** Prompts this player to pick an amount of cards equal to numCards from
@@ -186,49 +206,5 @@ public class Player implements Comparable {
      */
     public Role getInitRole() {
         return _initRole;
-    }
-
-    /**
-     * Compares this object with the specified object for order.  Returns a
-     * negative integer, zero, or a positive integer as this object is less
-     * than, equal to, or greater than the specified object.
-     *
-     * <p>The implementor must ensure
-     * {@code sgn(x.compareTo(y)) == -sgn(y.compareTo(x))}
-     * for all {@code x} and {@code y}.  (This
-     * implies that {@code x.compareTo(y)} must throw an exception iff
-     * {@code y.compareTo(x)} throws an exception.)
-     *
-     * <p>The implementor must also ensure that the relation is transitive:
-     * {@code (x.compareTo(y) > 0 && y.compareTo(z) > 0)} implies
-     * {@code x.compareTo(z) > 0}.
-     *
-     * <p>Finally, the implementor must ensure that {@code x.compareTo(y)==0}
-     * implies that {@code sgn(x.compareTo(z)) == sgn(y.compareTo(z))}, for
-     * all {@code z}.
-     *
-     * <p>It is strongly recommended, but <i>not</i> strictly required that
-     * {@code (x.compareTo(y)==0) == (x.equals(y))}.  Generally speaking, any
-     * class that implements the {@code Comparable} interface and violates
-     * this condition should clearly indicate this fact.  The recommended
-     * language is "Note: this class has a natural ordering that is
-     * inconsistent with equals."
-     *
-     * <p>In the foregoing description, the notation
-     * {@code sgn(}<i>expression</i>{@code )} designates the mathematical
-     * <i>signum</i> function, which is defined to return one of {@code -1},
-     * {@code 0}, or {@code 1} according to whether the value of
-     * <i>expression</i> is negative, zero, or positive, respectively.
-     *
-     * @param o the object to be compared.
-     * @return a negative integer, zero, or a positive integer as this object
-     * is less than, equal to, or greater than the specified object.
-     * @throws NullPointerException if the specified object is null
-     * @throws ClassCastException   if the specified object's type prevents it
-     *                              from being compared to this object.
-     */
-    @Override
-    public int compareTo(Object o) {
-        return 0;
     }
 }

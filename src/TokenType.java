@@ -24,6 +24,6 @@ public interface TokenType {
      * otherwise
      */
     default boolean isVisible() {
-        return false;
+        return true;
     };
 }

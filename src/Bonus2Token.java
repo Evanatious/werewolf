@@ -3,7 +3,7 @@
  *
  * @author Evan Gao
  */
-public enum Bonus2Token implements TokenType {
+public enum Bonus2Token implements TokenType { //FIXME: Are these Marks?
     VAMPIRE("Mist of the Vampire") {
 
     }, TRAITOR("Dagger of the Traitor") {
@@ -20,6 +20,11 @@ public enum Bonus2Token implements TokenType {
 
     @Override
     public String getName() {
-        return null;
+        return _name;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return false;
     }
 }

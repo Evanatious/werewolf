@@ -4,7 +4,7 @@
  *
  * @author Evan Gao
  */
-public enum DaybreakToken implements TokenType {
+public enum DaybreakArtifact implements Artifact {
     WEREWOLF("Claw of the Werewolf") {
 
     }, VILLAGER("Brand of the Villager") {
@@ -22,12 +22,17 @@ public enum DaybreakToken implements TokenType {
     private String _name;
 
     /** The constructor for a DaybreakToken object. */
-    DaybreakToken(String name) {
+    DaybreakArtifact(String name) {
         _name = name;
     }
 
     @Override
     public String getName() {
         return _name;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return false;
     }
 }
