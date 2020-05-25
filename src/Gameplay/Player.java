@@ -38,6 +38,19 @@ public class Player {
         _alive = true;
     }
 
+    /** FIXME
+     *
+     * @param message
+     * @param card
+     */
+    public void showCard(String message, Card card) {
+        //TODO
+    }
+
+    public void showPlayers(String message, Set<Player> players) {
+        //TODO
+    }
+
     /** Displays the given info to this player. THIS NEEDS HELLA WORK AND DECKING OUT
      * Need to figure out what the parameter should be. Is it a String or what?
      * Might have a parameter to determine what type of info is displayed (EX:
@@ -55,6 +68,8 @@ public class Player {
      * otherwise
      */
     public boolean promptMayAction(String message) {
+        //TODO: print on the player's screen the message
+        //TODO: print on the player's screen: "Would you like to take this action?"
         return true; //FIXME
     }
 
@@ -171,7 +186,7 @@ public class Player {
             //FIXME: Tokens.Shield tokens don't affect marks!!!! AHHHH
             //Watch out for the shield token and other tokens that don't do anything
         } else {
-            return getFinalRole().won(_game);
+            return getEndRole().won(_game);
         }
     }
 
@@ -214,7 +229,7 @@ public class Player {
      * @return the role dictated by the card this player has at the end of the
      * game
      */
-    public Role getFinalRole() {
+    public Role getEndRole() {
         return getCard().getRole().getFinalRole();
     }
 

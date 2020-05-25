@@ -3,6 +3,11 @@ package Roles;
 import Gameplay.Game;
 import Gameplay.Player;
 import Roles.Teams.Team;
+import com.google.common.collect.TreeMultimap;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /** An interface to represent a Roles.Role in ONUW.
  *
@@ -80,20 +85,17 @@ public interface Role {
         return game.getWinningTeam().contains(getTeam());
     }
 
-     /** A helper method that finds the player with the specified role in the
-     *  given game. Assumes that there is a player with the specified role.
+     /** A helper method that finds the player(s) with the specified role in the
+     *  given game. Assumes that there is at least one player with the specified
+     *  role.
      *
-     * @param game the game to look for the player in
-     * @param role the role of the player to look for
-     * @return the player with the specified role in the given game
+     * @param game the game to look for the player(s) in
+     * @param role the role of the player(s) to look for
+     * @return the player(s) with the specified role in the given game
      */
-    static Player findPlayer(Game game, Role role) {
-        for (Player p: game.getPlayers()) {
-            if (p.getInitRole() == role) {
-                return p;
-            }
-        }
-        return null; //Should never reach this line;
+    static Set<Player> findPlayersWithRole(Game game, Role role) {
+        TreeMultimap<Role, Player> map = game.getRoleMap();
+        return new HashSet<>(map.get(role));
     }
 
     /** A getter method that returns the phase during which this role operates.
@@ -105,4 +107,5 @@ public interface Role {
     }
 
     //default void changeTeam(); ?? TODO: Maybe implement a way to change a team, since so many roles have an initial team but can easily switch teams
+    //TODO: Or, make team an instance variable in player...nah that's only for marks and stuff, which is covered in player already
 }

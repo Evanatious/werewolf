@@ -1,4 +1,4 @@
-/** A class to test the methods of Gameplay.Game.
+/** A class to test the methods of Game.
  *
  * @author Evan Gao
  */

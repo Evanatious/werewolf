@@ -7,7 +7,7 @@ import com.google.common.collect.TreeMultimap;
 import java.util.*;
 
 /** A class that represents a game of ONUW. It is a singleton class (there
- *  should only be one object of type Gameplay.Game in existence).
+ *  should only be one object of type Game in existence).
  *
  * @author Evan Gao
  */
@@ -71,7 +71,7 @@ public class Game {
     private boolean _gameOver;
     /** The winning team of this game. */
     private Set<Team> _winningTeam;
-    /** The singleton Gameplay.Game object. */
+    /** The singleton Game object. */
     private static Game _app;
     /** The list of cards that are available for this game of ONUW. */
     private static List<Card> _cards;
@@ -99,6 +99,17 @@ public class Game {
 
     public static void votingPhase() {
         //TODO
+    }
+
+    /** A helper method that updates a player (because they are a changeling
+     *  that now has a new role) in the TreeMultimap of roles to players.
+     *
+     * @param p a player
+     * @param oldRole the player's old role (to find them in the TreeMultimap
+     */
+    public void updatePlayer(Player p, Role oldRole) {
+        _rolesToPlayers.remove(oldRole, p);
+        _rolesToPlayers.put(p.getInitRole(), p);
     }
 
     /** A helper method that returns the priority of a role in terms of the
@@ -132,7 +143,7 @@ public class Game {
         (int) (getPriority(o1.getInitRole()) -
             getPriority(o2.getInitRole())) * 10;
 
-    /** The private Gameplay.Game constructor. */
+    /** The private Game constructor. */
     private Game() {
         _rolesToPlayers =
             TreeMultimap.create(ROLE_COMPARATOR, PLAYER_COMPARATOR);
@@ -146,13 +157,17 @@ public class Game {
     /** A getter method that returns _app if it already exists, and creates it
      *  if it doesn't.
      *
-     * @return the singleton Gameplay.Game object
+     * @return the singleton Game object
      */
     public static Game getApp() {
         if (_app == null) {
             _app = new Game();
         }
         return _app;
+    }
+
+    public TreeMultimap<Role, Player> getRoleMap() {
+        return _rolesToPlayers;
     }
 
     /** A getter method that returns the set of all alternate/house rules that
@@ -284,14 +299,14 @@ public class Game {
         if (_winningTeam.size() == 0) {
             if (isEpic()) {
                 //TODO: Implement the logic for Epic Battles
-            } else {
+            } else { //TODO: This whole thing needs a LOT of testing
                 Set<Team> died = new HashSet<>();
                 boolean villageExists = _teams.contains(StandardTeam.VILLAGE);
                 boolean tannerDied = false;
 
                 for (Player p : _players) {
                     if (!p.isAlive()) {
-                        Role finalRole = p.getFinalRole();
+                        Role finalRole = p.getEndRole();
 
                         if (finalRole.getTeam() != StandardTeam.VILLAGE
                             && !finalRole.isSacrificial()) { //died will not be affected by sacrificial roles
@@ -318,26 +333,31 @@ public class Game {
                 }
 
                 if (_winningTeam.size() == 0) {
-                    if (died.isEmpty() && _teams.size() == 1
+                    boolean nothingHappened = true;
+                    if (died.isEmpty() && _teams.size() == 1 //No evils, and no one dies
                         && _teams.contains(StandardTeam.VILLAGE)) {
                         _winningTeam.add(StandardTeam.VILLAGE);
+                        nothingHappened = false;
                     }
                     if (_houseRules.contains(HouseRule.NOVILLAGEDEATH)) {
                         if (!died.isEmpty() && !died.contains(StandardTeam.VILLAGE)) {
                             _winningTeam.add(StandardTeam.VILLAGE);
+                            nothingHappened = false;
                         }
                     }
-                    if (!tannerDied) {
+                    if (!tannerDied && !villageExists) {
                         if (_houseRules.contains(HouseRule.EVILSMUSTKILL)
                         && !died.isEmpty()) {
                             if (_winningTeam.isEmpty()) {
-                                _winningTeam.add(null);
+                                _winningTeam.add(null); //no one died
                             }
                         } else {
                             _winningTeam.addAll(_teams);
                             _winningTeam.removeAll(died);
                         }
-                    } else {
+                        nothingHappened = false;
+                    }
+                    if (nothingHappened) {
                         _winningTeam.add(null); //No winner (Or Tanner won)
                     }
                 }

@@ -6,7 +6,9 @@ import Roles.Teams.Team;
 import Roles.Teams.VillainTeam;
 
 /** An enum to represent and store the roles in a game of One Night Ultimate
- *  Super Villains: FIXME
+ *  Super Villains: Mirror Man, Temptress, Dr. Peeker, Rapscallion, Evilometer,
+ *  Mad Scientist, Intern, Annoying Lad, Detector, Role Retriever, Voodoo Lou,
+ *  Switcheroo, Self-Awareness Girl, Flipper, and Innocent Bystander.
  *
  * @author Evan Gao
  */
@@ -29,7 +31,7 @@ public enum VillainRole implements Role {
 
     }, DETECTOR("Detector", VillainTeam.HERO) {
 
-    }, ROLE_RETRIEVER("Roles.Role Retriever", VillainTeam.HERO) {
+    }, ROLE_RETRIEVER("Role Retriever", VillainTeam.HERO) {
 
     }, VOODOO_LOU("Voodoo Lou", VillainTeam.HERO) {
 
