@@ -157,11 +157,16 @@ public class Player {
      */
     public boolean isWinner() {
         assert _game.gameOver();
-        //FIXME: Special cases: Doppelganger, Assassin, Cupid, Diseased, Instigator, Copycat, Apprentice Assassin
-        if (getFinalRole().hasAlternateWinCon()) {
-            return true;
+
+        if (_tokens.size() > 0) {
+            //FIXME: Special cases: Marks and artifacts
+            return false;
+            //Assume that the token's effects have already been applied somewhere along the way
+            //TODO: Maybe write a applyToken() method in Player
+            //FIXME: Shield tokens don't affect marks!!!! AHHHH
+            //Watch out for the shield token and other tokens that don't do anything
         } else {
-            return getFinalRole().getTeam() == _game.getWinningTeam();
+            return getFinalRole().won(_game);
         }
     }
 
@@ -171,6 +176,14 @@ public class Player {
      */
     public Card getCard() {
         return _card;
+    }
+
+    /** A getter method that returns the game this player belongs to.
+     *
+     * @return the game this player belongs to
+     */
+    public Game getGame() {
+        return _game;
     }
 
     /** A getter method that returns this player's name.

@@ -1,4 +1,4 @@
-/** An enum to represent and store the tokens in a game of ONUW Daybreak:
+/** An enum to represent and store the artifacts in a game of ONUW Daybreak:
  *  Claw of the Werewolf, Brand of the Villager, Cudgel of the Tanner, Void
  *  of Nothingness, Mask of Muting, and Shroud of Shame.
  *

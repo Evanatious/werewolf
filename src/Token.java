@@ -1,36 +1,29 @@
-/** A class to represent a Token in ONUW.
+/** An interface to represent a token in ONUW.
  *
  * @author Evan Gao
  */
-public class Token {
-    /** This card's type. */
-    private TokenType _type;
-    /** The Game this card belongs to. */
-    private Game _game;
-
-    /** The constructor for a Token object.
+public interface Token {
+    /** Apply this token's specified status.
      *
-     * @param type the type of this token
-     * @param game the game this token belongs to
+     * @param currPlayer the player on which this status should be applied
      */
-    public Token(TokenType type, Game game) {
-        _type = type;
-        _game = game;
+    default void applyStatus(Player currPlayer) {
+
     }
 
-    /** A getter method that returns this token's type.
+    /** A getter method that returns the name of this token.
      *
-     * @return this token's type
+     * @return the name of this token
      */
-    public TokenType getType() {
-        return _type;
-    }
+    String getName();
 
-    /** A getter method that returns the game this card belongs to.
+    /** A getter method that returns true if this token is visible to other
+     *  players (like the Shield token), and false otherwise.
      *
-     * @return the game this card belongs to
+     * @return true if this token is visible to other players, and false
+     * otherwise
      */
-    public Game getGame() {
-        return _game;
-    }
+    default boolean isVisible() {
+        return true;
+    };
 }

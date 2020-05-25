@@ -1,5 +1,3 @@
-import java.util.Comparator;
-
 /** An enum to represent and store the standard roles in a game of ONUW:
  *  Doppelganger, Werewolf, Minion, Mason, Seer, Robber, Troublemaker, Drunk,
  *  Insomniac, Villager, Hunter, and Tanner.
@@ -20,10 +18,6 @@ public enum StandardRole implements Role {
             return true;
         }
 
-        @Override
-        public boolean hasAlternateWinCon() {
-            return true; //For lone minion
-        }
     }, MASON("Mason", StandardTeam.VILLAGE) {
 
     }, SEER("Seer", StandardTeam.VILLAGE) {
@@ -61,13 +55,14 @@ public enum StandardRole implements Role {
     }
 
     @Override
-    public void doAction(Game game, Player currPlayer) {
+    public void doAction(Player currPlayer) {
         if (this == DOPPELGANGER) {
+            Game currGame = currPlayer.getGame();
             Player otherPlayer = currPlayer.promptChoosePlayerAction(
                 DOPPELGANGER_MESSAGE, 1, false)[0];
             Role newRole = otherPlayer.getCard().getRole();
             if (newRole == VampireRole.COPYCAT) {
-                if (game.getHouseRules().contains(HouseRule.DOPPELCAT1)) {
+                if (currGame.getHouseRules().contains(HouseRule.DOPPELCAT1)) {
                     //TODO: view card in center, do it immediately (if it performs immediately?) idk
                 } else {
                     _newRole = newRole; //TODO: Should it be newRole.getFinalRole()?
@@ -77,7 +72,7 @@ public enum StandardRole implements Role {
                 _newRole = newRole;
                 currPlayer.swapRole(newRole);
                 if (newRole.performImmediately()) {
-                    newRole.doAction(game, currPlayer);
+                    newRole.doAction(currPlayer);
                 }
             }
         }

@@ -5,10 +5,9 @@
 public interface Role {
     /** Perform this role's specified action.
      *
-     * @param game the Game to which this role should perform its action on
      * @param currPlayer the Player who has this role
      */
-    default void doAction(Game game, Player currPlayer) {
+    default void doAction(Player currPlayer) {
 
     }
 
@@ -65,14 +64,14 @@ public interface Role {
         return this;
     }
 
-    /** A getter method that returns true if this role has an alternate win
-     *  condition, and false otherwise.
+    /** A getter method that returns true if this role has won in the given
+     *  game, and false otherwise. Assumes the game is over.
      *
-     * @return true if this role has an alternate win condition, and false
-     * otherwise
+     * @param game a game
+     * @return true if this role has won in the given game, and false otherwise
      */
-    default boolean hasAlternateWinCon() {
-        return false;
+    default boolean won(Game game) {
+        return game.getWinningTeam().contains(getTeam());
     }
 
      /** A helper method that finds the player with the specified role in the

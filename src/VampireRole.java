@@ -23,10 +23,6 @@ public enum VampireRole implements Role {
             return true;
         }
 
-        @Override
-        public boolean hasAlternateWinCon() {
-            return true;
-        }
     }, DISEASED("Diseased", StandardTeam.VILLAGE) {
 
     }, CUPID("Cupid", StandardTeam.VILLAGE) {
@@ -36,15 +32,9 @@ public enum VampireRole implements Role {
     }, PRIEST("Priest", StandardTeam.VILLAGE) {
 
     }, ASSASSIN("Assassin", StandardTeam.NEUTRAL) {
-        @Override
-        public boolean hasAlternateWinCon() {
-            return true;
-        }
+
     }, APPRENTICE_ASSASSIN("Apprentice Assassin", StandardTeam.NEUTRAL) {
-        @Override
-        public boolean hasAlternateWinCon() {
-            return true;
-        }
+
     }, MARKSMAN("Marksman", StandardTeam.VILLAGE) {
 
     }, PICKPOCKET("Pickpocket", StandardTeam.VILLAGE) {
@@ -71,7 +61,7 @@ public enum VampireRole implements Role {
     }
 
     @Override
-    public void doAction(Game game, Player currPlayer) {
+    public void doAction(Player currPlayer) {
         if (this == COPYCAT) {
             Card chosen =
                 currPlayer.promptChooseCardAction(COPYCAT_MESSAGE, 1)[0];
