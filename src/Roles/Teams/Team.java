@@ -3,8 +3,9 @@ package Roles.Teams;
 import Gameplay.Game;
 import Gameplay.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /** An interface for representing teams in ONUW.
  *
@@ -17,8 +18,8 @@ public interface Team {
      * @param g a game
      * @return all players in the provided game that are on this team
      */
-    default Set<Player> findAll(Game g) {
-        HashSet<Player> result = new HashSet<>();
+    default List<Player> findAll(Game g) {
+        ArrayList<Player> result = new ArrayList<>();
         for (Player p: g.getPlayers()) {
             if (p.getCard().getRole().getFinalRole().getTeam() == this) {
                 result.add(p);

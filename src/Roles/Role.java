@@ -5,9 +5,7 @@ import Gameplay.Player;
 import Roles.Teams.Team;
 import com.google.common.collect.TreeMultimap;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /** An interface to represent a Roles.Role in ONUW.
  *
@@ -93,9 +91,9 @@ public interface Role {
      * @param role the role of the player(s) to look for
      * @return the player(s) with the specified role in the given game
      */
-    static Set<Player> findPlayersWithRole(Game game, Role role) {
-        TreeMultimap<Role, Player> map = game.getRoleMap();
-        return new HashSet<>(map.get(role));
+    static List<Player> findPlayersWithRole(Game game, Role role) {
+        TreeMultimap<Role, Player> map = game.getRoleMap(); //TODO: Make sure TreeMultimaps work...
+        return new ArrayList<>(map.get(role));
     }
 
     /** A getter method that returns the phase during which this role operates.

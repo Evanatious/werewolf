@@ -166,7 +166,7 @@ public class Game {
         return _app;
     }
 
-    public TreeMultimap<Role, Player> getRoleMap() {
+    public TreeMultimap<Role, Player> getRoleMap() { //FIXME: Try to have it return a copy if possible
         return _rolesToPlayers;
     }
 
@@ -176,7 +176,7 @@ public class Game {
      * @return the set of all alternate/house rules that are currently applied
      */
     public Set<Rule> getHouseRules() {
-        return _houseRules;
+        return new HashSet<>(_houseRules);
     }
 
     /** A method that toggles the rule denoted "r" on if it is off, and off if
@@ -221,7 +221,7 @@ public class Game {
      * @return the list of players in this game
      */
     public List<Player> getPlayers() {
-        return _players;
+        return new ArrayList<>(_players);
     }
 
     /** A getter method that returns the list of cards in this game.
@@ -229,15 +229,15 @@ public class Game {
      * @return the list of cards in this game
      */
     public List<Card> getCards() {
-        return _cards;
+        return new ArrayList<>(_cards);
     }
 
     /** A getter method that returns the array of cards in the middle.
      *
      * @return the array of cards in the middle
      */
-    public Card[] getMiddle() {
-        return _middle;
+    public List<Card> getMiddle() {
+        return Arrays.asList(_middle);
     }
 
     /** A helper method that returns whether or not this game is an "Epic
@@ -363,7 +363,7 @@ public class Game {
                 }
             }
         }
-        return _winningTeam;
+        return new HashSet<>(_winningTeam);
     }
 
     /** A method that restarts the state of the game, setting everything back

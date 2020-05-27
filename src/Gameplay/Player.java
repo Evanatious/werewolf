@@ -26,10 +26,10 @@ public class Player {
     /** The game that this player is a part of. */
     private Game _game;
 
-    /** The constructor for a Gameplay.Player object.
+    /** The constructor for a Player object.
      *
      * @param name the name of the player
-     * @param game the Gameplay.Game this player belongs to
+     * @param game the Game this player belongs to
      */
     public Player(String name, Game game) {
         _name = name;
@@ -38,25 +38,29 @@ public class Player {
         _alive = true;
     }
 
-    /** FIXME
+    /** Shows the provided card to this player.
      *
-     * @param message
-     * @param card
+     * @param message a message that accompanies the reveal of the card
+     * @param card the card that is revealed to this player
      */
     public void showCard(String message, Card card) {
         //TODO
     }
 
-    public void showPlayers(String message, Set<Player> players) {
+    /** Shows the provided players to this player.
+     *
+     * @param message a message that accompanies the reveal of the players
+     * @param players the set of players that is revealed to this player
+     */
+    public void showPlayers(String message, List<Player> players) {
         //TODO
     }
 
-    /** Displays the given info to this player. THIS NEEDS HELLA WORK AND DECKING OUT
-     * Need to figure out what the parameter should be. Is it a String or what?
-     * Might have a parameter to determine what type of info is displayed (EX:
-     * if your has changed, what a role is, what cards are available to you, etc.)
+    /** Displays the given info to this player.
+     *
+     * @param info the info that is displayed to this player
      */
-    public void displayInfo() {
+    public void displayInfo(String info) {
         //TODO
     }
 
@@ -91,49 +95,53 @@ public class Player {
     }
 
     /** Prompts this player to pick an amount of cards equal to numCards from
-     *  the middle cards.
+     *  the provided pool of cards.
      *
      * @param message the message that is displayed along with the choice
      * @param numCards the number of cards that will be selected
-     * @return the Gameplay.Card(s) that this player chooses
+     * @param pool the pool of cards to choose from
+     * @return the card(s) that this player chooses
      */
-    public Card[] promptChooseCardAction(String message, int numCards) {
-        List<Object> cardPool = new ArrayList<Object>();
-        Card[] mid = _game.getMiddle();
-        for (int i = 0; i < mid.length; i++) {
-            cardPool.add(mid[i]);
-        }
+    public Card[] promptChooseCardAction(String message, int numCards,
+                                         List<Card> pool) {
+        List<Object> cardPool = new ArrayList<>(pool);
         Card[] selected =
             Arrays.copyOf(choose(cardPool, numCards), numCards, Card[].class);
         return selected;
     }
 
-    /** Prompts this player to pick a number of players equal to numPlayers (the
-     *  chosen player(s) must be someone other than this player).
+    /** Prompts this player to pick a number of players equal to numPlayers from
+     *  the provided pool of players.
      *
      * @param message the message that is displayed along with the choice
      * @param numPlayers the number of players that will be selected
-     * @return the Gameplay.Player(s) that this player chooses
+     * @param pool the pool of players to choose from
+     * @return the player(s) that this player chooses
      */
     public Player[] promptChoosePlayerAction(String message, int numPlayers,
-                                             boolean selfAllowed) {
-        HashSet<Object> playerPool = new HashSet<Object>(_game.getPlayers());
-        if (!selfAllowed) {
-            playerPool.remove(this);
-        }
+                                             List<Player> pool) {
+        ArrayList<Object> playerPool = new ArrayList<>(pool);
         return Arrays.copyOf(choose(playerPool, numPlayers),
             numPlayers, Player[].class);
     }
 
-    /** A helper method that helps a player choose from a collection/pool of
+    /** A helper method that helps a player choose from a list/pool of
      *  objects (could be players, cards, etc.).
      *
-     * @param c the collection to choose from
+     * @param c the list to choose from
      * @param numObjects the number of objects to choose
      * @return an array of the objects chosen
      */
-    public Object[] choose(Collection<Object> c, int numObjects) {
+    public Object[] choose(List<Object> c, int numObjects) { //TODO: Might have to create an interface Choosable or something,
+        //TODO: so that when actually choosing something, you can click on the actual thing rather than some text buttons
+        /*
+        if (c.getClass() instanceof Chooseable){
+
+        }
+
+         */
         return null; //FIXME: Maybe needs a String message?
+
     }
 
     /** Kills this player by setting their _alive status to false. */
@@ -144,7 +152,7 @@ public class Player {
     /** Gives this player their card along with their initial role (which is
      *  the role specified by the card they receive).
      *
-     * @param card the initial Gameplay.Card this player gets at the start of a game
+     * @param card the initial Card this player gets at the start of a game
      */
     public void initCard(Card card) {
         _card = card;
@@ -153,8 +161,8 @@ public class Player {
 
     /** Replaces this player's card with the argument named 'card'.
      *
-     * @param card the Gameplay.Card that this player will now have
-     * @return the Gameplay.Card this player used to have
+     * @param card the Card that this player will now have
+     * @return the Card this player used to have
      */
     public Card swapCard(Card card) {
         Card result = _card;
@@ -182,7 +190,7 @@ public class Player {
             //FIXME: Special cases: Marks and artifacts
             return false;
             //Assume that the token's effects have already been applied somewhere along the way
-            //TODO: Maybe write a applyToken() method in Gameplay.Player
+            //TODO: Maybe write a applyToken() method in Player
             //FIXME: Tokens.Shield tokens don't affect marks!!!! AHHHH
             //Watch out for the shield token and other tokens that don't do anything
         } else {

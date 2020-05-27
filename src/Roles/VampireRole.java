@@ -6,6 +6,8 @@ import Roles.Teams.StandardTeam;
 import Roles.Teams.Team;
 import Roles.Teams.VampireTeam;
 
+import java.util.List;
+
 /** An enum to represent and store the roles in a game of One Night Ultimate
  *  Vampire: Copycat, Vampire, The Count, The Master, Renfield, Diseased, Cupid,
  *  Instigator, Priest, Assassin, Apprentice Assassin, Marksman, Pickpocket,
@@ -71,8 +73,9 @@ public enum VampireRole implements Role {
     @Override
     public void doAction(Player currPlayer) {
         if (this == COPYCAT) {
+            List<Card> pool = currPlayer.getGame().getMiddle();
             Card chosen =
-                currPlayer.promptChooseCardAction(COPYCAT_MESSAGE, 1)[0];
+                currPlayer.promptChooseCardAction(COPYCAT_MESSAGE, 1, pool)[0];
             Role chosenRole = chosen.getRole();
             _newRole = chosenRole;
             currPlayer.swapRole(chosenRole);
