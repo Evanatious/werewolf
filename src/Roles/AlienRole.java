@@ -12,29 +12,29 @@ import Roles.Teams.Team;
  * @author Evan Gao
  */
 public enum AlienRole implements Role {
-    ORACLE("Oracle", StandardTeam.VILLAGE) {
+    ORACLE("Oracle", StandardTeam.Village) {
 
-    }, ALIEN("Alien", AlienTeam.ALIEN) {
+    }, ALIEN("Alien", AlienTeam.Alien) {
 
-    }, SYNTHETIC_ALIEN("Synthetic Alien", AlienTeam.ALIEN) {
+    }, SYNTHETIC_ALIEN("Synthetic Alien", AlienTeam.Alien) {
 
-    }, COW("Cow", StandardTeam.VILLAGE) {
+    }, COW("Cow", StandardTeam.Village) {
 
-    }, GROOB("Groob", AlienTeam.ALIEN) {
+    }, GROOB("Groob", AlienTeam.Alien) {
 
-    }, ZERB("Zerb", AlienTeam.ALIEN) {
+    }, ZERB("Zerb", AlienTeam.Alien) {
 
-    }, LEADER("Leader", StandardTeam.VILLAGE) {
+    }, LEADER("Leader", StandardTeam.Village) {
 
-    }, PSYCHIC("Psychic", StandardTeam.VILLAGE) {
+    }, PSYCHIC("Psychic", StandardTeam.Village) {
 
-    }, RASCAL("Rascal", StandardTeam.VILLAGE) {
+    }, RASCAL("Rascal", StandardTeam.Village) {
 
-    }, EXPOSER("Exposer", StandardTeam.VILLAGE) {
+    }, EXPOSER("Exposer", StandardTeam.Village) {
 
-    }, BLOB("Blob", StandardTeam.NEUTRAL) {
+    }, BLOB("Blob", StandardTeam.Neutral) {
 
-    }, MORTICIAN("Mortician", StandardTeam.NEUTRAL) {
+    }, MORTICIAN("Mortician", StandardTeam.Neutral) {
 
     };
 

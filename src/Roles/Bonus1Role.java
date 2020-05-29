@@ -9,11 +9,11 @@ import Roles.Teams.Team;
  * @author Evan Gao
  */
 public enum Bonus1Role implements Role {
-    AURA_SEER("Aura Seer", StandardTeam.VILLAGE) {
+    AURA_SEER("Aura Seer", StandardTeam.Village) {
 
-    }, CURSED("Cursed", StandardTeam.VILLAGE) {
+    }, CURSED("Cursed", StandardTeam.Village) {
 
-    }, PRINCE("Prince", StandardTeam.VILLAGE) {
+    }, PRINCE("Prince", StandardTeam.Village) {
 
     };
 

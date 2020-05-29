@@ -16,40 +16,40 @@ import java.util.List;
  * @author Evan Gao
  */
 public enum VampireRole implements Role {
-    COPYCAT("Copycat", StandardTeam.NEUTRAL) {
+    COPYCAT("Copycat", StandardTeam.Neutral) {
         @Override
         public boolean isChangeling() {
             return true;
         }
-    }, VAMPIRE("Vampire", VampireTeam.VAMPIRE) {
+    }, VAMPIRE("Vampire", VampireTeam.Vampire) {
 
-    }, COUNT("The Count", VampireTeam.VAMPIRE) {
+    }, COUNT("The Count", VampireTeam.Vampire) {
 
-    }, MASTER("The Master", VampireTeam.VAMPIRE) {
+    }, MASTER("The Master", VampireTeam.Vampire) {
 
-    }, RENFIELD("Renfield", VampireTeam.VAMPIRE) {
+    }, RENFIELD("Renfield", VampireTeam.Vampire) {
         @Override
         public boolean isSacrificial() {
             return true;
         }
 
-    }, DISEASED("Diseased", StandardTeam.VILLAGE) {
+    }, DISEASED("Diseased", StandardTeam.Village) {
 
-    }, CUPID("Cupid", StandardTeam.VILLAGE) {
+    }, CUPID("Cupid", StandardTeam.Village) {
 
-    }, INSTIGATOR("Instigator", StandardTeam.VILLAGE) {
+    }, INSTIGATOR("Instigator", StandardTeam.Village) {
 
-    }, PRIEST("Priest", StandardTeam.VILLAGE) {
+    }, PRIEST("Priest", StandardTeam.Village) {
 
-    }, ASSASSIN("Assassin", StandardTeam.NEUTRAL) {
+    }, ASSASSIN("Assassin", StandardTeam.Neutral) {
 
-    }, APPRENTICE_ASSASSIN("Apprentice Assassin", StandardTeam.NEUTRAL) {
+    }, APPRENTICE_ASSASSIN("Apprentice Assassin", StandardTeam.Neutral) {
 
-    }, MARKSMAN("Marksman", StandardTeam.VILLAGE) {
+    }, MARKSMAN("Marksman", StandardTeam.Village) {
 
-    }, PICKPOCKET("Pickpocket", StandardTeam.VILLAGE) {
+    }, PICKPOCKET("Pickpocket", StandardTeam.Village) {
 
-    }, GREMLIN("Gremlin", StandardTeam.VILLAGE) {
+    }, GREMLIN("Gremlin", StandardTeam.Village) {
 
     };
 
@@ -72,6 +72,8 @@ public enum VampireRole implements Role {
 
     @Override
     public void doAction(Player currPlayer) {
+        currPlayer.displayInfo(getDescription());
+
         if (this == COPYCAT) {
             List<Card> pool = currPlayer.getGame().getMiddle();
             Card chosen =

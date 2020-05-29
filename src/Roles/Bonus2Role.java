@@ -10,15 +10,15 @@ import Roles.Teams.Team;
  * @author Evan Gao
  */
 public enum Bonus2Role implements Role {
-    APPRENTICE_TANNER("Apprentice Tanner", StandardTeam.NEUTRAL),
-    THING("Thing (that goes bump in the night)", StandardTeam.VILLAGE) {
+    APPRENTICE_TANNER("Apprentice Tanner", StandardTeam.Neutral),
+    THING("Thing (that goes bump in the night)", StandardTeam.Village) {
 
-    }, SQUIRE("Squire", StandardTeam.WEREWOLF) {
+    }, SQUIRE("Squire", StandardTeam.Werewolf) {
         @Override
         public boolean isSacrificial() {
             return true;
         }
-    }, BEHOLDER("Beholder", StandardTeam.VILLAGE) {
+    }, BEHOLDER("Beholder", StandardTeam.Village) {
 
     };
 

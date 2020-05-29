@@ -14,7 +14,7 @@ import static java.util.Arrays.asList;
  * @author Evan Gao
  */
 public enum StandardRole implements Role {
-    DOPPELGANGER("Doppelgänger", StandardTeam.NEUTRAL) {
+    DOPPELGANGER("Doppelgänger", StandardTeam.Neutral) {
         @Override
         public Phase getPhase() {
             return StandardPhase.NIGHT;
@@ -29,7 +29,7 @@ public enum StandardRole implements Role {
         public boolean won(Game game) {
             return getFinalRole().won(game);
         }
-    }, WEREWOLF("Werewolf", StandardTeam.WEREWOLF) {
+    }, WEREWOLF("Werewolf", StandardTeam.Werewolf) {
         @Override
         public Phase getPhase() {
             return StandardPhase.NIGHT;
@@ -37,8 +37,9 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
-            List<Player> werewolves = StandardTeam.WEREWOLF.findAll(currGame); //See if this works
+            List<Player> werewolves = StandardTeam.Werewolf.findAll(currGame); //See if this works
             for (Player p: werewolves) {
                 if (p.getInitRole().isSacrificial()) {
                     werewolves.remove(p);
@@ -58,7 +59,7 @@ public enum StandardRole implements Role {
                 currPlayer.showPlayers("Here are the other werewolves: ", werewolves);
             }
         }
-    }, MINION("Minion", StandardTeam.WEREWOLF) {
+    }, MINION("Minion", StandardTeam.Werewolf) {
         @Override
         public Phase getPhase() {
             return StandardPhase.NIGHT;
@@ -76,8 +77,9 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
-            List<Player> werewolves = StandardTeam.WEREWOLF.findAll(currGame); //See if this works
+            List<Player> werewolves = StandardTeam.Werewolf.findAll(currGame); //See if this works
             for (Player p: werewolves) {
                 if (p.getInitRole().isSacrificial()) {
                     werewolves.remove(p);
@@ -97,7 +99,7 @@ public enum StandardRole implements Role {
                 currPlayer.showPlayers("The following players are Werewolves: ", werewolves);
             }
         }
-    }, MASON("Mason", StandardTeam.VILLAGE) {
+    }, MASON("Mason", StandardTeam.Village) {
         @Override
         public Phase getPhase() {
             return StandardPhase.NIGHT;
@@ -105,6 +107,7 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
             List<Player> masons = Role.findPlayersWithRole(currGame, this);
             masons.remove(currPlayer);
@@ -115,7 +118,7 @@ public enum StandardRole implements Role {
                 currPlayer.showPlayers("The following players are Masons: ", masons);
             }
         }
-    }, SEER("Seer", StandardTeam.VILLAGE) {
+    }, SEER("Seer", StandardTeam.Village) {
         @Override
         public Phase getPhase() {
             return StandardPhase.NIGHT;
@@ -128,6 +131,7 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
@@ -141,15 +145,15 @@ public enum StandardRole implements Role {
                 } else {
                     List<Player> otherPlayers = currGame.getPlayers();
                     otherPlayers.remove(currPlayer);
-                    currPlayer.promptChoosePlayerAction(
-                        "Pick another player.", 1, otherPlayers);
-                    Card playerCard = currPlayer.getCard();
-                    String playerName = currPlayer.getName();
-                    currPlayer.showCard(playerName + "'s card is: ", playerCard);
+                    Player chosen = currPlayer.promptChoosePlayerAction(
+                        "Pick another player.", 1, otherPlayers)[0];
+                    Card chosenCard = chosen.getCard();
+                    String chosenName = chosen.getName();
+                    currPlayer.showCard(chosenName + "'s card is: ", chosenCard);
                 }
             }
         }
-    }, ROBBER("Robber", StandardTeam.VILLAGE) {
+    }, ROBBER("Robber", StandardTeam.Village) {
         @Override
         public Phase getPhase() {
             return StandardPhase.NIGHT;
@@ -162,25 +166,97 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                 || currPlayer.promptMayAction("You may exchange your card with another player's card, and then view your new card.")) {
-
+                List<Player> otherPlayers = currGame.getPlayers();
+                otherPlayers.remove(currPlayer);
+                Player chosen = currPlayer.promptChoosePlayerAction(
+                    "Pick another player.", 1, otherPlayers)[0];
+                currGame.swapPlayerAndPlayer(currPlayer, chosen);
+                currPlayer.showCard("Your new card is: ", currPlayer.getCard());
             }
         }
-    }, TROUBLEMAKER("Troublemaker", StandardTeam.VILLAGE) {
+    }, TROUBLEMAKER("Troublemaker", StandardTeam.Village) {
+        @Override
+        public Phase getPhase() {
+            return StandardPhase.NIGHT;
+        }
 
-    }, DRUNK("Drunk", StandardTeam.VILLAGE) {
+        @Override
+        public boolean performImmediately() {
+            return true;
+        }
 
-    }, INSOMNIAC("Insomniac", StandardTeam.VILLAGE) {
+        @Override
+        public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
+            Game currGame = currPlayer.getGame();
 
+            if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
+                || currPlayer.promptMayAction("You may exchange cards between two other players.")) {
+                List<Player> otherPlayers = currGame.getPlayers();
+                otherPlayers.remove(currPlayer);
+                Player[] chosen = currPlayer.promptChoosePlayerAction(
+                    "Pick two other players.", 2, otherPlayers);
+                currGame.swapPlayerAndPlayer(chosen[0], chosen[1]);
+            }
+        }
+    }, DRUNK("Drunk", StandardTeam.Village) {
+        @Override
+        public Phase getPhase() {
+            return StandardPhase.NIGHT;
+        }
+
+        @Override
+        public boolean performImmediately() {
+            return true;
+        }
+
+        @Override
+        public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
+            Game currGame = currPlayer.getGame();
+
+            Card chosen = currPlayer.promptChooseCardAction(
+                "You must exchange your card with a card from the center.",
+                1, currGame.getMiddle())[0];
+            currGame.swapPlayerAndCenter(currPlayer, chosen);
+        }
+    }, INSOMNIAC("Insomniac", StandardTeam.Village) {
+        @Override
+        public Phase getPhase() {
+            return StandardPhase.NIGHT;
+        }
+
+        @Override
+        public void doAction(Player currPlayer) {
+            super.doAction(currPlayer);
+            Game currGame = currPlayer.getGame();
+
+            currPlayer.showCard("You are now: ", currPlayer.getCard());
+        }
     },
-    VILLAGER("Villager", StandardTeam.VILLAGE),
-    HUNTER("Hunter", StandardTeam.VILLAGE) {
-
+    VILLAGER("Villager", StandardTeam.Village),
+    HUNTER("Hunter", StandardTeam.Village) {
+        @Override
+        public Phase getPhase() {
+            return StandardPhase.VOTE;
+        }
     },
-    TANNER("Tanner", StandardTeam.NEUTRAL);
+    TANNER("Tanner", StandardTeam.Neutral) {
+        @Override
+        public Phase getPhase() {
+            return StandardPhase.VOTE;
+        }
+
+        @Override
+        public boolean won(Game game, Player player) {
+            return false; //FIXME
+        }
+    };
 
     public static final String SEER_OPTION1 = "2 Center Cards";
     public static final String SEER_OPTION2 = "1 (Other) Player's Card";
@@ -214,6 +290,8 @@ public enum StandardRole implements Role {
 
     @Override
     public void doAction(Player currPlayer) {
+        currPlayer.displayInfo(getDescription());
+
         if (this == DOPPELGANGER) {
             Game currGame = currPlayer.getGame();
             List<Player> players = currGame.getPlayers();

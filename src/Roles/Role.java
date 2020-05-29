@@ -17,7 +17,7 @@ public interface Role {
      * @param currPlayer the Gameplay.Player who has this role
      */
     default void doAction(Player currPlayer) {
-
+        currPlayer.displayInfo(getDescription());
     }
 
     /** A getter method that returns what team this role belongs to.
@@ -79,7 +79,7 @@ public interface Role {
      * @param game a game
      * @return true if this role has won in the given game, and false otherwise
      */
-    default boolean won(Game game) {
+    default boolean won(Game game, Player player) {
         return game.getWinningTeam().contains(getTeam());
     }
 
@@ -102,6 +102,15 @@ public interface Role {
      */
     default Phase getPhase() {
         return StandardPhase.NONE;
+    }
+
+    /**
+     * A getter method that returns a String describing this role.
+     *
+     * @return a description of this role
+     */
+    default String getDescription() {
+        return "You are a " + getName() + ". You are on the " + getTeam().toString() + " team.";
     }
 
     //default void changeTeam(); ?? TODO: Maybe implement a way to change a team, since so many roles have an initial team but can easily switch teams

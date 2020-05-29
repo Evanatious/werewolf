@@ -12,30 +12,30 @@ import Roles.Teams.Team;
  * @author Evan Gao
  */
 public enum DaybreakRole implements Role {
-    SENTINEL("Sentinel", StandardTeam.VILLAGE) {
+    SENTINEL("Sentinel", StandardTeam.Village) {
 
-    }, ALPHA_WOLF("Alpha Wolf", StandardTeam.WEREWOLF) {
+    }, ALPHA_WOLF("Alpha Wolf", StandardTeam.Werewolf) {
 
-    }, MYSTIC_WOLF("Mystic Wolf", StandardTeam.WEREWOLF) {
+    }, MYSTIC_WOLF("Mystic Wolf", StandardTeam.Werewolf) {
 
-    }, APPRENTICE_SEER("Apprentice Seer", StandardTeam.VILLAGE) {
+    }, APPRENTICE_SEER("Apprentice Seer", StandardTeam.Village) {
 
-    }, PI("Paranormal Investigator", StandardTeam.VILLAGE) {
+    }, PI("Paranormal Investigator", StandardTeam.Village) {
         //TODO: BRUH HE HAS TO SWITCH ROLES
-    }, WITCH("Witch", StandardTeam.VILLAGE) {
+    }, WITCH("Witch", StandardTeam.Village) {
         //TODO: She swaps cards, luckily that's easier to implement than PI
         //Since promptPlayerAction doesn't allow for you to choose yourself,
         //there will need to be a special button/function for the witch to
         //choose herself.
-    }, VILLAGE_IDIOT("Village Idiot", StandardTeam.VILLAGE) {
+    }, VILLAGE_IDIOT("Village Idiot", StandardTeam.Village) {
 
-    }, REVEALER("Revealer", StandardTeam.VILLAGE) {
+    }, REVEALER("Revealer", StandardTeam.Village) {
 
-    }, CURATOR("Curator", StandardTeam.VILLAGE) {
+    }, CURATOR("Curator", StandardTeam.Village) {
 
-    }, DREAM_WOLF("Dream Wolf", StandardTeam.WEREWOLF) {
+    }, DREAM_WOLF("Dream Wolf", StandardTeam.Werewolf) {
 
-    }, BODYGUARD("Bodyguard", StandardTeam.VILLAGE) {
+    }, BODYGUARD("Bodyguard", StandardTeam.Village) {
 
     };
 

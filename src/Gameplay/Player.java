@@ -207,7 +207,7 @@ public class Player {
             //FIXME: Tokens.Shield tokens don't affect marks!!!! AHHHH
             //Watch out for the shield token and other tokens that don't do anything
         } else {
-            return getEndRole().won(_game);
+            return getEndRole().won(_game, this);
         }
     }
 

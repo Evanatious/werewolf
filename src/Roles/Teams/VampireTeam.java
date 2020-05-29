@@ -6,5 +6,5 @@ package Roles.Teams;
  * @author Evan Gao
  */
 public enum VampireTeam implements Team {
-    VAMPIRE;
+    Vampire;
 }

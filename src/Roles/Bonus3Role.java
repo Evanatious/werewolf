@@ -9,11 +9,11 @@ import Roles.Teams.Team;
  * @author Evan Gao
  */
 public enum Bonus3Role implements Role{
-    BODY_SNATCHER("Body Snatcher", StandardTeam.VILLAGE) {
+    BODY_SNATCHER("Body Snatcher", StandardTeam.Village) {
 
-    }, EMPATH("Empath", StandardTeam.VILLAGE) {
+    }, EMPATH("Empath", StandardTeam.Village) {
 
-    }, NOSTRADAMUS("Nostradamus", StandardTeam.VILLAGE) {
+    }, NOSTRADAMUS("Nostradamus", StandardTeam.Village) {
 
     };
 

@@ -6,7 +6,7 @@ package Roles.Teams;
  * @author Evan Gao
  */
 public enum StandardTeam implements Team {
-    VILLAGE,
-    WEREWOLF,
-    NEUTRAL
+    Village,
+    Werewolf,
+    Neutral
 }

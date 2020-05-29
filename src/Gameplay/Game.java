@@ -21,11 +21,11 @@ public class Game {
         Game app = getApp();
         List<Card> temp = new ArrayList<Card>();
         for (Role r: StandardRole.values()) {
-            if (r == StandardRole.VILLAGER) {
+            if (r == StandardRole.VillageR) {
                 for (int i = 0; i < 3; i++) {
                     temp.add(new Card(r, app));
                 }
-            } else if (r == StandardRole.WEREWOLF
+            } else if (r == StandardRole.Werewolf
                 || r == StandardRole.MASON) {
                 for (int i = 0; i < 2; i++) {
                     temp.add(new Card(r, app));
@@ -315,7 +315,7 @@ public class Game {
             Card c = _cards.get(index);
             Role r = c.getRole();
             Team t = r.getTeam();
-            if (t != StandardTeam.NEUTRAL && !r.isSacrificial()) {
+            if (t != StandardTeam.Neutral && !r.isSacrificial()) {
                 _teams.add(t); //FIXME: Doesn't account for a Copycat that might become something in the center...Might fix on the spot when the copycat takes their role
             }
             _rolesToPlayers.put(r, p);
@@ -347,18 +347,18 @@ public class Game {
                 //TODO: Implement the logic for Epic Battles
             } else { //TODO: This whole thing needs a LOT of testing
                 Set<Team> died = new HashSet<>();
-                boolean villageExists = _teams.contains(StandardTeam.VILLAGE);
+                boolean villageExists = _teams.contains(StandardTeam.Village);
                 boolean tannerDied = false;
 
                 for (Player p : _players) {
                     if (!p.isAlive()) {
                         Role finalRole = p.getEndRole();
 
-                        if (finalRole.getTeam() != StandardTeam.VILLAGE
+                        if (finalRole.getTeam() != StandardTeam.Village
                             && !finalRole.isSacrificial()) { //died will not be affected by sacrificial roles
                             if (villageExists && !_houseRules.contains(
-                                HouseRule.NOVILLAGEDEATH)) {
-                                _winningTeam.add(StandardTeam.VILLAGE);
+                                HouseRule.NOVillageDEATH)) {
+                                _winningTeam.add(StandardTeam.Village);
                                 break;
                             } else {
                                 died.add(finalRole.getTeam());
@@ -373,7 +373,7 @@ public class Game {
                                 tannerDied = true;
                             }
                         } else if (villageExists) {
-                            died.add(StandardTeam.VILLAGE);
+                            died.add(StandardTeam.Village);
                         }
                     }
                 }
@@ -381,13 +381,13 @@ public class Game {
                 if (_winningTeam.size() == 0) {
                     boolean nothingHappened = true;
                     if (died.isEmpty() && _teams.size() == 1 //No evils, and no one dies
-                        && _teams.contains(StandardTeam.VILLAGE)) {
-                        _winningTeam.add(StandardTeam.VILLAGE);
+                        && _teams.contains(StandardTeam.Village)) {
+                        _winningTeam.add(StandardTeam.Village);
                         nothingHappened = false;
                     }
-                    if (_houseRules.contains(HouseRule.NOVILLAGEDEATH)) {
-                        if (!died.isEmpty() && !died.contains(StandardTeam.VILLAGE)) {
-                            _winningTeam.add(StandardTeam.VILLAGE);
+                    if (_houseRules.contains(HouseRule.NOVillageDEATH)) {
+                        if (!died.isEmpty() && !died.contains(StandardTeam.Village)) {
+                            _winningTeam.add(StandardTeam.Village);
                             nothingHappened = false;
                         }
                     }

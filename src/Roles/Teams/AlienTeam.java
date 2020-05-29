@@ -6,5 +6,5 @@ package Roles.Teams;
  * @author Evan Gao
  */
 public enum AlienTeam implements Team {
-    ALIEN;
+    Alien
 }

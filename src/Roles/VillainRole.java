@@ -13,7 +13,7 @@ import Roles.Teams.VillainTeam;
  * @author Evan Gao
  */
 public enum VillainRole implements Role {
-    MIRROR_MAN("Mirror Man", StandardTeam.NEUTRAL) {
+    MIRROR_MAN("Mirror Man", StandardTeam.Neutral) {
 
     }, TEMPTRESS("Temptress", VillainTeam.SUPERVILLAIN) {
 
@@ -23,9 +23,9 @@ public enum VillainRole implements Role {
 
     }, EVILOMETER("Evilometer", VillainTeam.HERO) {
 
-    }, MAD_SCIENTIST("Mad Scientist", StandardTeam.NEUTRAL) {
+    }, MAD_SCIENTIST("Mad Scientist", StandardTeam.Neutral) {
 
-    }, INTERN("Intern", StandardTeam.NEUTRAL) {
+    }, INTERN("Intern", StandardTeam.Neutral) {
 
     }, ANNOYING_LAD("Annoying Lad", VillainTeam.HERO) {
 
@@ -41,7 +41,7 @@ public enum VillainRole implements Role {
 
     }, FLIPPER("Flipper", VillainTeam.HERO) {
 
-    }, INNOCENT_BYSTANDER("Innocent Bystander", StandardTeam.NEUTRAL) {
+    }, INNOCENT_BYSTANDER("Innocent Bystander", StandardTeam.Neutral) {
 
     };
 
@@ -60,6 +60,7 @@ public enum VillainRole implements Role {
 
     @Override
     public void doAction(Player currPlayer) {
+        currPlayer.displayInfo(getDescription());
         //TODO: Mirror Man
     }
 
