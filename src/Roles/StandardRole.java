@@ -227,12 +227,12 @@ public enum StandardRole implements Role {
                     //TODO: view card in center, do it immediately (if it performs immediately?) idk
                 } else {
                     _newRole = newRole; //TODO: Should it be newRole.getFinalRole()?
-                    currPlayer.swapRole(newRole); //FIXME: I think this will have whatever role the copycat turned into as well
+                    currPlayer.changeRole(newRole); //FIXME: I think this will have whatever role the copycat turned into as well
                 }
             } else { //FIXME: Maybe some of this should belong in Game? I don't think so though because it's best to just call doAction and not worry about it
                 Role oldRole = currPlayer.getInitRole();
                 _newRole = newRole;
-                currPlayer.swapRole(newRole);
+                currPlayer.changeRole(newRole);
                 if (newRole.performImmediately()) {
                     newRole.doAction(currPlayer);
                 } else {

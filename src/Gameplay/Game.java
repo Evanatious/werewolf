@@ -47,9 +47,8 @@ public class Game {
     private boolean usingBonus3;
      */
 
-
     /** The number of cards that belong in the middle. */
-    public static final int NUM_CARDS_IN_MIDDLE = 3;
+    private int numCardsInMiddle = 3;
     /** The minimum number of players a game can have. */
     public static final int MIN_NUM_PLAYERS = 3;
     /** THe number of teams required for a game to be considered an
@@ -65,7 +64,7 @@ public class Game {
 
     /** The list of players in this game. */
     private List<Player> _players;
-    /** The three center cards. */
+    /** The center cards. */
     private Card[] _middle;
     /** The state of the game. */
     private boolean _gameOver;
@@ -145,6 +144,7 @@ public class Game {
 
     /** The private Game constructor. */
     private Game() {
+        _middle = new Card[3];
         _rolesToPlayers =
             TreeMultimap.create(ROLE_COMPARATOR, PLAYER_COMPARATOR);
         _houseRules = new HashSet<>();
@@ -179,7 +179,7 @@ public class Game {
         return new HashSet<>(_houseRules);
     }
 
-    /** A method that toggles the rule denoted "r" on if it is off, and off if
+    /** Toggles the rule denoted "r" on if it is off, and off if
      *  it is on. Returns false if the rule is now toggled off, and true
      *  otherwise.
      *
@@ -194,26 +194,32 @@ public class Game {
         return result;
     }
 
-    /** A setter method that sets the players in this game.
+    /** Adds the provided player into this game.
      *
-     * @param players a set containing the players in this game
-     * @result true if the set of players has changed, and false otherwise
+     * @param p a player
      */
-    public boolean setPlayers(Set<Player> players) {
-        assert players.size() >= MIN_NUM_PLAYERS
-            && players.size() <= DEFAULT_CARDS.size() - NUM_CARDS_IN_MIDDLE;
-        return _players.addAll(players);
+    public void addPlayer(Player p) {
+        _players.add(p);
     }
 
-    /** A setter method that sets the cards in this game. Assumes that cards is
+    /** Adds the provided card into this game. Assumes that cards is
      *  taken from DEFAULT_CARDS (for now).
      *
-     * @param cards a list containing the cards in this game
-     * @return true if the set of cards has changed, and false otherwise
+     * @param c a card
+     * @param centerWolf true if the card is the center wolf card, and false
+     *                   otherwise
      */
-    public boolean setCards(List<Card> cards) {
-        assert cards.size() == _players.size() + NUM_CARDS_IN_MIDDLE;
-        return _cards.addAll(cards);
+    public void addCard(Card c, boolean centerWolf) {
+        if (c.getRole() == DaybreakRole.ALPHA_WOLF) {
+            numCardsInMiddle = 4;
+            _middle = new Card[4];
+        }
+        if (centerWolf) {
+            assert numCardsInMiddle == 4;
+            _middle[3] = c;
+        }
+
+        _cards.add(c);
     }
 
     /** A getter method that returns the list of players in this game.
@@ -240,6 +246,33 @@ public class Game {
         return Arrays.asList(_middle);
     }
 
+    /** Swaps the provided player's card with the provided card from the center.
+     *
+     * @param p a player
+     * @param c a card
+     */
+    public void swapPlayerAndCenter(Player p, Card c) {
+        assert Arrays.asList(_middle).contains(c);
+        int index = -1;
+        for (int i = 0; i < _middle.length; i++) {
+            if (_middle[i] == c) {
+                index = i;
+            }
+        }
+
+        _middle[index] = p.swapCard(c);
+    }
+
+    /** Swaps the two provided players' cards.
+     *
+     * @param p1 the first player
+     * @param p2 the second player
+     */
+    public void swapPlayerAndPlayer(Player p1, Player p2) {
+        Card p1OGCard = p1.getCard();
+        p1.swapCard(p2.swapCard(p1OGCard));
+    }
+
     /* TODO: Maybe? Idk how the animations will work
     public void swapAnimation(Card card1, Card card2) {
 
@@ -263,11 +296,14 @@ public class Game {
      *  each). */
     public void setUpGame() {
         assert _players.size() >= MIN_NUM_PLAYERS
-            && _players.size() <= DEFAULT_CARDS.size() - NUM_CARDS_IN_MIDDLE
-            && _cards.size() == _players.size() + NUM_CARDS_IN_MIDDLE;
+            //&& _players.size() <= DEFAULT_CARDS.size() - numCardsInMiddle Needs to be changed so that the total number of players does not exceed the total amount of cards - 3 or 4
+            && _cards.size() == _players.size() + numCardsInMiddle;
 
         restart();
-        _middle = new Card[NUM_CARDS_IN_MIDDLE];
+
+        if (numCardsInMiddle == 4) {
+            _cards.remove(_middle[3]);
+        }
 
         Collections.shuffle(_cards);
         for (int i = 0; i < 3; i++) {
@@ -286,6 +322,10 @@ public class Game {
             p.initCard(c);
             index++;
         }
+
+        if (numCardsInMiddle == 4) {
+            _cards.add(_middle[3]);
+        }
     }
 
     /** A getter method that returns the state of this game.
@@ -296,8 +336,7 @@ public class Game {
         return _gameOver;
     }
 
-    /** A method that returns the winning team(s) of this game. Assumes that
-     *  this game is over.
+    /** Returns the winning team(s) of this game. Assumes this game is over.
      *
      * @return the winning team(s) of this game
      */
@@ -373,9 +412,10 @@ public class Game {
         return new HashSet<>(_winningTeam);
     }
 
-    /** A method that restarts the state of the game, setting everything back
-     *  as if a completely new game were being started. */
+    /** Restarts the state of the game, setting everything back as if a
+     *  completely new game were being started. */
     public void restart() {
+        _middle = new Card[3];
         _rolesToPlayers.clear();
         _houseRules.clear();
         _teams.clear();

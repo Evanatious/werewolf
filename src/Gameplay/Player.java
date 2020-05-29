@@ -235,12 +235,18 @@ public class Player {
         return _name;
     }
 
+    //FIXME: Is this necessary? I currently have it for the choose method, so that it can automatically just print out whatever's being chosen
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     /** A setter method that sets this player's role to the indicated role.
      *  Assumes that this player's card is a changeling.
      *
      * @param newRole the role this player now becomes
      */
-    public void swapRole(Role newRole) {
+    public void changeRole(Role newRole) {
         assert _card.getRole().isChangeling();
         _initRole = newRole;
     }

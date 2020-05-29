@@ -78,7 +78,7 @@ public enum VampireRole implements Role {
                 currPlayer.promptChooseCardAction(COPYCAT_MESSAGE, 1, pool)[0];
             Role chosenRole = chosen.getRole();
             _newRole = chosenRole;
-            currPlayer.swapRole(chosenRole);
+            currPlayer.changeRole(chosenRole);
         }
     }
 
