@@ -26,8 +26,8 @@ public enum StandardRole implements Role {
         }
 
         @Override
-        public boolean won(Game game) {
-            return getFinalRole().won(game);
+        public boolean won(Game game, Player player) {
+            return getFinalRole().won(game, player);
         }
     }, WEREWOLF("Werewolf", StandardTeam.Werewolf) {
         @Override
@@ -144,6 +144,9 @@ public enum StandardRole implements Role {
                     currPlayer.showCard("The second card you picked was: ", twoCards[1]);
                 } else {
                     List<Player> otherPlayers = currGame.getPlayers();
+
+                    //TODO: Needs to check for shield token
+
                     otherPlayers.remove(currPlayer);
                     Player chosen = currPlayer.promptChoosePlayerAction(
                         "Pick another player.", 1, otherPlayers)[0];
@@ -168,6 +171,8 @@ public enum StandardRole implements Role {
         public void doAction(Player currPlayer) {
             super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
+
+            //TODO: Needs to check for shield token
 
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                 || currPlayer.promptMayAction("You may exchange your card with another player's card, and then view your new card.")) {
@@ -195,6 +200,8 @@ public enum StandardRole implements Role {
             super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
+            //TODO: Needs to check for shield token
+
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                 || currPlayer.promptMayAction("You may exchange cards between two other players.")) {
                 List<Player> otherPlayers = currGame.getPlayers();
@@ -220,10 +227,14 @@ public enum StandardRole implements Role {
             super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
+            //TODO: Needs to check for shield token
+
             Card chosen = currPlayer.promptChooseCardAction(
                 "You must exchange your card with a card from the center.",
                 1, currGame.getMiddle())[0];
             currGame.swapPlayerAndCenter(currPlayer, chosen);
+
+            //FIXME: Needs to update
         }
     }, INSOMNIAC("Insomniac", StandardTeam.Village) {
         @Override
@@ -236,6 +247,8 @@ public enum StandardRole implements Role {
             super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
+            //TODO: Needs to check for shield token
+
             currPlayer.showCard("You are now: ", currPlayer.getCard());
         }
     },
@@ -244,6 +257,11 @@ public enum StandardRole implements Role {
         @Override
         public Phase getPhase() {
             return StandardPhase.VOTE;
+        }
+
+        @Override
+        public void doAction(Player currPlayer) {
+
         }
     },
     TANNER("Tanner", StandardTeam.Neutral) {

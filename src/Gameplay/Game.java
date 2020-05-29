@@ -21,11 +21,11 @@ public class Game {
         Game app = getApp();
         List<Card> temp = new ArrayList<Card>();
         for (Role r: StandardRole.values()) {
-            if (r == StandardRole.VillageR) {
+            if (r == StandardRole.VILLAGER) {
                 for (int i = 0; i < 3; i++) {
                     temp.add(new Card(r, app));
                 }
-            } else if (r == StandardRole.Werewolf
+            } else if (r == StandardRole.WEREWOLF
                 || r == StandardRole.MASON) {
                 for (int i = 0; i < 2; i++) {
                     temp.add(new Card(r, app));
@@ -100,8 +100,8 @@ public class Game {
         //TODO
     }
 
-    /** A helper method that updates a player (because they are a changeling
-     *  that now has a new role) in the TreeMultimap of roles to players.
+    /** A helper method that updates a player (because they now have a new role)
+     *  in the TreeMultimap of roles to players.
      *
      * @param p a player
      * @param oldRole the player's old role (to find them in the TreeMultimap
@@ -283,11 +283,19 @@ public class Game {
     /** A helper method that returns whether or not this game is an "Epic
      *  Battle". An Epic Battle means that there are three or more teams in
      *  play in this game (in play means that only player cards count towards
-     *  a team being a team, and center cards don't count).
+     *  a team being a team, and center cards don't count). Also, figures out
+     *  the teams in play.
      *
      * @return true if this game is an "Epic Battle", and false otherwise
      */
     private boolean isEpic() {
+        for (Player p: _players) {
+            Role r = p.getEndRole();
+            Team t = r.getTeam();
+            if (t != StandardTeam.Neutral && !r.isSacrificial()) {
+                _teams.add(t);
+            }
+        }
         return _teams.size() >= EPIC_BATTLE_NUM;
     } //TODO: Figure out what to do about the hero team
 
@@ -301,23 +309,22 @@ public class Game {
 
         restart();
 
-        if (numCardsInMiddle == 4) {
+        if (numCardsInMiddle == 4) { //Could also be _rolesToPlayers.containsKey(DaybreakRole.ALPHA_WOLF)
             _cards.remove(_middle[3]);
         }
 
         Collections.shuffle(_cards);
         for (int i = 0; i < 3; i++) {
-            _middle[i] = _cards.get(i);
+            Card c = _cards.get(i);
+            Role r = c.getRole();
+            _middle[i] = c;
+            _rolesToPlayers.put(r, null);
         }
 
         int index = 3;
         for (Player p: _players) {
             Card c = _cards.get(index);
             Role r = c.getRole();
-            Team t = r.getTeam();
-            if (t != StandardTeam.Neutral && !r.isSacrificial()) {
-                _teams.add(t); //FIXME: Doesn't account for a Copycat that might become something in the center...Might fix on the spot when the copycat takes their role
-            }
             _rolesToPlayers.put(r, p);
             p.initCard(c);
             index++;
@@ -357,7 +364,7 @@ public class Game {
                         if (finalRole.getTeam() != StandardTeam.Village
                             && !finalRole.isSacrificial()) { //died will not be affected by sacrificial roles
                             if (villageExists && !_houseRules.contains(
-                                HouseRule.NOVillageDEATH)) {
+                                HouseRule.NOVILLAGEDEATH)) {
                                 _winningTeam.add(StandardTeam.Village);
                                 break;
                             } else {
@@ -385,7 +392,7 @@ public class Game {
                         _winningTeam.add(StandardTeam.Village);
                         nothingHappened = false;
                     }
-                    if (_houseRules.contains(HouseRule.NOVillageDEATH)) {
+                    if (_houseRules.contains(HouseRule.NOVILLAGEDEATH)) {
                         if (!died.isEmpty() && !died.contains(StandardTeam.Village)) {
                             _winningTeam.add(StandardTeam.Village);
                             nothingHappened = false;
