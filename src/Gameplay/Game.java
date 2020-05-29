@@ -240,6 +240,13 @@ public class Game {
         return Arrays.asList(_middle);
     }
 
+    /* TODO: Maybe? Idk how the animations will work
+    public void swapAnimation(Card card1, Card card2) {
+
+    }
+
+     */
+
     /** A helper method that returns whether or not this game is an "Epic
      *  Battle". An Epic Battle means that there are three or more teams in
      *  play in this game (in play means that only player cards count towards

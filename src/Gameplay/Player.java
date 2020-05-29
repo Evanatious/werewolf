@@ -10,6 +10,17 @@ import java.util.*;
  * @author Evan Gao
  */
 public class Player {
+    /** The word 'Yes'. */
+    public static final String YES = "Yes";
+    /** The word 'No'. */
+    public static final String NO = "No";
+    /** The list of options when prompted with a "May" ability: Yes or No. */
+    public static final List<String> MAY_OPTIONS;
+    static {
+        MAY_OPTIONS = new ArrayList<>();
+        MAY_OPTIONS.add(YES);
+        MAY_OPTIONS.add(NO);
+    }
     /** The name of this player. */
     private String _name;
     /** The initial role (that is, the role that this player starts off with) of
@@ -74,7 +85,9 @@ public class Player {
     public boolean promptMayAction(String message) {
         //TODO: print on the player's screen the message
         //TODO: print on the player's screen: "Would you like to take this action?"
-        return true; //FIXME
+        String choice = (String)
+            choose(Collections.singletonList(MAY_OPTIONS), 1)[0]; //TODO: Check that singletonlist works
+        return choice.equals(YES);
     }
 
     /** Adds the provided token to the set of tokens this player possesses.

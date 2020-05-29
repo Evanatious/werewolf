@@ -131,21 +131,44 @@ public enum StandardRole implements Role {
             Game currGame = currPlayer.getGame();
 
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
-                || currPlayer.promptMayAction("You may look at another player's card or two of the center cards")) {
+                || currPlayer.promptMayAction("You may look at another player's card or two of the center cards.")) {
                 if (currPlayer.choose(Collections.singletonList(SEER_OPTIONS),
                     1)[0].equals(SEER_OPTION1)) { //TODO: See if singletonList does whatever the heck it's supposed to do
-
                     Card[] twoCards = currPlayer.promptChooseCardAction(
                         "Pick two center cards.", 2, currGame.getMiddle()); //FIXME: Either needs to choose one card at a time or have choose in Player be REALLY fleshed out
-                    currPlayer.showCard("DO I EVEN NEED A MESSAGE? ", twoCards[0]);
-                    currPlayer.showCard("DO I EVEN NEED A MESSAGE? ", twoCards[1]);
+                    currPlayer.showCard("The first card you picked was: ", twoCards[0]);
+                    currPlayer.showCard("The second card you picked was: ", twoCards[1]);
                 } else {
-                    //TODO: Look at another player's card
+                    List<Player> otherPlayers = currGame.getPlayers();
+                    otherPlayers.remove(currPlayer);
+                    currPlayer.promptChoosePlayerAction(
+                        "Pick another player.", 1, otherPlayers);
+                    Card playerCard = currPlayer.getCard();
+                    String playerName = currPlayer.getName();
+                    currPlayer.showCard(playerName + "'s card is: ", playerCard);
                 }
             }
         }
     }, ROBBER("Robber", StandardTeam.VILLAGE) {
+        @Override
+        public Phase getPhase() {
+            return StandardPhase.NIGHT;
+        }
 
+        @Override
+        public boolean performImmediately() {
+            return true;
+        }
+
+        @Override
+        public void doAction(Player currPlayer) {
+            Game currGame = currPlayer.getGame();
+
+            if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
+                || currPlayer.promptMayAction("You may exchange your card with another player's card, and then view your new card.")) {
+
+            }
+        }
     }, TROUBLEMAKER("Troublemaker", StandardTeam.VILLAGE) {
 
     }, DRUNK("Drunk", StandardTeam.VILLAGE) {
@@ -162,9 +185,9 @@ public enum StandardRole implements Role {
     public static final String SEER_OPTION1 = "2 Center Cards";
     public static final String SEER_OPTION2 = "1 (Other) Player's Card";
 
-    public static final Set<String> SEER_OPTIONS;
+    public static final List<String> SEER_OPTIONS;
     static {
-        SEER_OPTIONS = new HashSet<>();
+        SEER_OPTIONS = new ArrayList<>();
         SEER_OPTIONS.add(SEER_OPTION1);
         SEER_OPTIONS.add(SEER_OPTION2);
     }
