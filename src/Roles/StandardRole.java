@@ -37,7 +37,6 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
             List<Player> werewolves = StandardTeam.Werewolf.findAll(currGame); //See if this works
             for (Player p: werewolves) {
@@ -76,7 +75,6 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
             List<Player> werewolves = StandardTeam.Werewolf.findAll(currGame); //See if this works
             for (Player p: werewolves) {
@@ -105,7 +103,6 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
             List<Player> masons = Role.findPlayersWithRole(currGame, this);
             masons.remove(currPlayer);
@@ -129,7 +126,6 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
@@ -171,7 +167,6 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
             //TODO: Needs to check for shield token
@@ -199,7 +194,6 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
             //TODO: Needs to check for shield token
@@ -229,15 +223,12 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
             //TODO: Needs to check for shield token
 
             Card chosen = currPlayer.chooseCard("You must exchange your card with a card from the center.", currGame.getMiddle());
             currGame.swapPlayerAndCenter(currPlayer, chosen);
-
-            //FIXME: Needs to update
         }
     }, INSOMNIAC("Insomniac", StandardTeam.Village) {
         @Override
@@ -247,7 +238,6 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-            super.doAction(currPlayer);
             Game currGame = currPlayer.getGame();
 
             //TODO: Needs to check for shield token
@@ -264,7 +254,9 @@ public enum StandardRole implements Role {
 
         @Override
         public void doAction(Player currPlayer) {
-
+            if (!currPlayer.isAlive()) {
+                currPlayer.voted().die(false);
+            }
         }
     },
     TANNER("Tanner", StandardTeam.Neutral) {
@@ -315,7 +307,6 @@ public enum StandardRole implements Role {
 
     @Override
     public void doAction(Player currPlayer) {
-        currPlayer.displayInfo(getDescription());
 
         if (this == DOPPELGANGER) {
             Game currGame = currPlayer.getGame();

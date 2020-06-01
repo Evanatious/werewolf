@@ -17,8 +17,6 @@ public interface Role {
      * @param currPlayer the player who has this role
      */
     default void doAction(Player currPlayer) {
-        Game currGame = currPlayer.getGame(); //TODO: wait for the specified amount of time (10 seconds)
-        currPlayer.displayInfo(getDescription());
 
     }
 

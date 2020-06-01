@@ -43,6 +43,9 @@ public class Player {
     private Game _game;
     /** The player this player voted for. */
     private Player _vote;
+    /** True if this player is immune to death by vote or Hunter, and false
+     *  otherwise. */
+    private boolean _immune;
 
     /** The constructor for a Player object.
      *
@@ -154,7 +157,7 @@ public class Player {
             }
         }
         return (Player) choose(message, playerPool);
-    } //TODO: Maybe make a method that lets someone choose multiple people
+    }
 
     /** Makes this player vote for a player other than themselves. */
     public void vote() {
@@ -190,12 +193,31 @@ public class Player {
 
     }
 
-    /** Kills this player (if they are able to be killed). */
-    public void kill() {
-        if (!_tokens.contains(Bonus1Token.PRINCE)
-            || _tokens.contains(VampireMark.LOVE)) {
+    /** Kills this player (if they are able to be killed).
+     *
+     * @param override true if this player was killed by an ability that
+     *                 overrides immunity (such as being killed from love)
+     */
+    public void die(boolean override) {
+        if (override || (!_immune && !_tokens.contains(Bonus1Token.PRINCE))) {
             _alive = false;
         }
+    }
+
+    /** A setter method that makes this player immune to death by vote or
+     *  Hunter. */
+    public void makeImmune() {
+        _immune = true;
+    }
+
+    /** A getter method that returns true if this player is immune to death
+     *  by vote or Hunter.
+     *
+     * @return true if this player is immune to death by vote or Hunter, and
+     * false otherwise.
+     */
+    public boolean isImmune() {
+        return _immune;
     }
 
     /** Gives this player their card along with their initial role (which is
