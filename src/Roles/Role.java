@@ -17,7 +17,9 @@ public interface Role {
      * @param currPlayer the player who has this role
      */
     default void doAction(Player currPlayer) {
+        Game currGame = currPlayer.getGame(); //TODO: wait for the specified amount of time (10 seconds)
         currPlayer.displayInfo(getDescription());
+
     }
 
     /** A getter method that returns what team this role belongs to.
@@ -80,7 +82,16 @@ public interface Role {
      * @return true if this role has won in the given game, and false otherwise
      */
     default boolean won(Game game, Player player) {
-        return game.getWinningTeam().contains(getTeam());
+        if (game.getHouseRules().contains(HouseRule.TANNERONLY)) {
+            for (Player p: game.getPlayers()) {
+                if (p.getEndRole() == StandardRole.TANNER) {
+                    return false;
+                }
+            }
+            return game.getWinningTeam().contains(getTeam());
+        } else {
+            return game.getWinningTeam().contains(getTeam());
+        }
     }
 
      /** A helper method that finds the player(s) with the specified role in the

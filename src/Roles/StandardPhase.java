@@ -8,6 +8,8 @@ package Roles;
 public enum StandardPhase implements Phase {
     EARLY,
     NIGHT,
+    PREVOTE,
     VOTE,
+    POSTVOTE,
     NONE;
 }

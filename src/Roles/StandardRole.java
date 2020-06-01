@@ -17,7 +17,7 @@ public enum StandardRole implements Role {
     DOPPELGANGER("Doppelgänger", StandardTeam.Neutral) {
         @Override
         public Phase getPhase() {
-            return StandardPhase.NIGHT;
+            return StandardPhase.EARLY;
         }
 
         @Override
@@ -50,8 +50,7 @@ public enum StandardRole implements Role {
                 currPlayer.displayInfo("You are the lone werewolf!");
                 if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                     || currPlayer.promptMayAction("You may choose one center card.")) {
-                    Card middleCard = currPlayer.promptChooseCardAction(
-                        "Pick one center card", 1, currGame.getMiddle())[0];
+                    Card middleCard = currPlayer.chooseCard("Pick one center card", currGame.getMiddle());
                     currPlayer.showCard("The card you have chosen was: ", middleCard);
                 }
             } else {
@@ -91,8 +90,7 @@ public enum StandardRole implements Role {
                 currPlayer.displayInfo("There were no other Werewolves, so you have become the lone werewolf!");
                 if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                     || currPlayer.promptMayAction("You may view one center card.")) {
-                    Card middleCard = currPlayer.promptChooseCardAction(
-                        "Pick one center card.", 1, currGame.getMiddle())[0];
+                    Card middleCard = currPlayer.chooseCard("Pick one center card.", currGame.getMiddle());
                     currPlayer.showCard("The card you have chosen was: ", middleCard);
                 }
             } else {
@@ -136,20 +134,24 @@ public enum StandardRole implements Role {
 
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                 || currPlayer.promptMayAction("You may look at another player's card or two of the center cards.")) {
-                if (currPlayer.choose(Collections.singletonList(SEER_OPTIONS),
-                    1)[0].equals(SEER_OPTION1)) { //TODO: See if singletonList does whatever the heck it's supposed to do
-                    Card[] twoCards = currPlayer.promptChooseCardAction(
-                        "Pick two center cards.", 2, currGame.getMiddle()); //FIXME: Either needs to choose one card at a time or have choose in Player be REALLY fleshed out
-                    currPlayer.showCard("The first card you picked was: ", twoCards[0]);
-                    currPlayer.showCard("The second card you picked was: ", twoCards[1]);
+                if (currPlayer.choose("Pick 1.", Collections.singletonList(SEER_OPTIONS)).equals(SEER_OPTION1)) { //TODO: See if singletonList does whatever the heck it's supposed to do
+                    Card card1 = currPlayer.chooseCard(
+                        "Pick 2 center cards.", currGame.getMiddle()); //FIXME: Either needs to choose one card at a time or have choose in Player be REALLY fleshed out
+                    currPlayer.showCard("The first card you picked was: ", card1);
+
+                    List<Card> remainingMiddle = currGame.getMiddle();
+                    remainingMiddle.remove(card1);
+                    Card card2 = currPlayer.chooseCard(
+                        "Pick 1 center card.", remainingMiddle);
+                    currPlayer.showCard("The second card you picked was: ", card2);
                 } else {
                     List<Player> otherPlayers = currGame.getPlayers();
 
                     //TODO: Needs to check for shield token
 
                     otherPlayers.remove(currPlayer);
-                    Player chosen = currPlayer.promptChoosePlayerAction(
-                        "Pick another player.", 1, otherPlayers)[0];
+                    Player chosen = currPlayer.choosePlayer(
+                        "Pick another player.", otherPlayers);
                     Card chosenCard = chosen.getCard();
                     String chosenName = chosen.getName();
                     currPlayer.showCard(chosenName + "'s card is: ", chosenCard);
@@ -178,8 +180,8 @@ public enum StandardRole implements Role {
                 || currPlayer.promptMayAction("You may exchange your card with another player's card, and then view your new card.")) {
                 List<Player> otherPlayers = currGame.getPlayers();
                 otherPlayers.remove(currPlayer);
-                Player chosen = currPlayer.promptChoosePlayerAction(
-                    "Pick another player.", 1, otherPlayers)[0];
+                Player chosen = currPlayer.choosePlayer(
+                    "Pick another player.", otherPlayers);
                 currGame.swapPlayerAndPlayer(currPlayer, chosen);
                 currPlayer.showCard("Your new card is: ", currPlayer.getCard());
             }
@@ -206,9 +208,12 @@ public enum StandardRole implements Role {
                 || currPlayer.promptMayAction("You may exchange cards between two other players.")) {
                 List<Player> otherPlayers = currGame.getPlayers();
                 otherPlayers.remove(currPlayer);
-                Player[] chosen = currPlayer.promptChoosePlayerAction(
-                    "Pick two other players.", 2, otherPlayers);
-                currGame.swapPlayerAndPlayer(chosen[0], chosen[1]);
+                Player p1 = currPlayer.choosePlayer(
+                    "Pick two other players.", otherPlayers);
+                otherPlayers.remove(p1);
+                Player p2 = currPlayer.choosePlayer(
+                    "Pick 1 other player.", otherPlayers);
+                currGame.swapPlayerAndPlayer(p1, p2);
             }
         }
     }, DRUNK("Drunk", StandardTeam.Village) {
@@ -229,9 +234,7 @@ public enum StandardRole implements Role {
 
             //TODO: Needs to check for shield token
 
-            Card chosen = currPlayer.promptChooseCardAction(
-                "You must exchange your card with a card from the center.",
-                1, currGame.getMiddle())[0];
+            Card chosen = currPlayer.chooseCard("You must exchange your card with a card from the center.", currGame.getMiddle());
             currGame.swapPlayerAndCenter(currPlayer, chosen);
 
             //FIXME: Needs to update
@@ -256,7 +259,7 @@ public enum StandardRole implements Role {
     HUNTER("Hunter", StandardTeam.Village) {
         @Override
         public Phase getPhase() {
-            return StandardPhase.VOTE;
+            return StandardPhase.POSTVOTE;
         }
 
         @Override
@@ -266,13 +269,17 @@ public enum StandardRole implements Role {
     },
     TANNER("Tanner", StandardTeam.Neutral) {
         @Override
-        public Phase getPhase() {
-            return StandardPhase.VOTE;
-        }
-
-        @Override
         public boolean won(Game game, Player player) {
-            return false; //FIXME
+            if (game.getHouseRules().contains(HouseRule.TANNERTEAM)) {
+                for (Player p: game.getPlayers()) {
+                    if (p.getEndRole() == StandardRole.TANNER) {
+                        if (!p.isAlive()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return !player.isAlive();
         }
     };
 
@@ -314,8 +321,8 @@ public enum StandardRole implements Role {
             Game currGame = currPlayer.getGame();
             List<Player> players = currGame.getPlayers();
             players.remove(currPlayer);
-            Player otherPlayer = currPlayer.promptChoosePlayerAction(
-                DOPPELGANGER_MESSAGE, 1, players)[0];
+            Player otherPlayer = currPlayer.choosePlayer(
+                DOPPELGANGER_MESSAGE, players);
             Role newRole = otherPlayer.getCard().getRole();
 
             if (newRole == VampireRole.COPYCAT) {

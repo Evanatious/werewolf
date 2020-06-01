@@ -54,12 +54,22 @@ public class Game {
     /** THe number of teams required for a game to be considered an
      *  "Epic Battle". */
     public static final int EPIC_BATTLE_NUM = 3;
+    /** The default amount of time allotted for discussion, in minutes. */
+    public static final int DEFAULT_DISC_TIME = 5;
+    /** The default amount of time allotted for a player to take their action,
+     *  in seconds. */
+    public static final int DEFAULT_ACTION_TIME = 10;
 
     //TODO: Implement time limits between moves, etc.
 
 
     /** The set of house/alternate rules that are active. */
     private Set<Rule> _houseRules;
+    /** The time allotted for discussion, in between when the Day phase starts
+     *  and the Voting phase starts. */
+    private int _discussionTime = DEFAULT_DISC_TIME;
+    /** The time allotted for each player to perform their action. */
+    private int _actionTime = DEFAULT_ACTION_TIME;
 
 
     /** The list of players in this game. */

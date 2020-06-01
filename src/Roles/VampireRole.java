@@ -77,7 +77,7 @@ public enum VampireRole implements Role {
         if (this == COPYCAT) {
             List<Card> pool = currPlayer.getGame().getMiddle();
             Card chosen =
-                currPlayer.promptChooseCardAction(COPYCAT_MESSAGE, 1, pool)[0];
+                currPlayer.chooseCard(COPYCAT_MESSAGE, pool);
             Role chosenRole = chosen.getRole();
             _newRole = chosenRole;
             currPlayer.changeRole(chosenRole);

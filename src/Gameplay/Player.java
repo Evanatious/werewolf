@@ -3,7 +3,6 @@ package Gameplay;
 import Roles.AlienRole;
 import Roles.Role;
 import Roles.StandardRole;
-import Roles.Teams.StandardTeam;
 import Roles.VampireRole;
 import Tokens.*;
 
@@ -42,6 +41,8 @@ public class Player {
     private boolean _won;
     /** The game that this player is a part of. */
     private Game _game;
+    /** The player this player voted for. */
+    private Player _vote;
 
     /** The constructor for a Player object.
      *
@@ -92,8 +93,8 @@ public class Player {
     public boolean promptMayAction(String message) {
         //TODO: print on the player's screen the message
         //TODO: print on the player's screen: "Would you like to take this action?"
-        String choice = (String)
-            choose(Collections.singletonList(MAY_OPTIONS), 1)[0]; //TODO: Check that singletonlist works
+        String choice = (String) choose("Would you like to take this action?",
+            Collections.singletonList(MAY_OPTIONS)); //TODO: Check that singletonlist works
         return choice.equals(YES);
     }
 
@@ -122,53 +123,62 @@ public class Player {
         _tokens.add(markToken);
     }
 
-    /** Prompts this player to pick an amount of cards equal to numCards from
-     *  the provided pool of cards.
+    /** Prompts this player to pick a card from a list of cards.
      *
      * @param message the message that is displayed along with the choice
-     * @param numCards the number of cards that will be selected
-     * @param pool the pool of cards to choose from
-     * @return the card(s) that this player chooses
+     * @param pool the set of cards to exclude from the choice
+     * @return the card that this player chooses
      */
-    public Card[] promptChooseCardAction(String message, int numCards,
-                                         List<Card> pool) {
+    public Card chooseCard(String message, List<Card> pool) {
         List<Object> cardPool = new ArrayList<>(pool);
-        Card[] selected =
-            Arrays.copyOf(choose(cardPool, numCards), numCards, Card[].class);
-        return selected;
+        return (Card) choose(message, cardPool);
     }
 
-    /** Prompts this player to pick a number of players equal to numPlayers from
-     *  the provided pool of players. Will automatically remove any players
-     *  that are invalid choices (For example, if a player has a shield token).
-     *  //FIXME: Or, should I make it so that in choose, it gets rid of them? At the least,
+
+
+    /** Prompts this player to pick a player from the provided pool of players.
+     *  Will automatically remove any players that are invalid choices (For
+     *  example, if a player has a shield token).
+     *  FIXME: Or, should I make it so that in choose, it gets rid of them? At the least,
      *  FIXME: there should be an interface that greys out a player if they have the shield token or something and explains why
      *
      * @param message the message that is displayed along with the choice
-     * @param numPlayers the number of players that will be selected
      * @param pool the pool of players to choose from
-     * @return the player(s) that this player chooses
+     * @return the player that this player chooses
      */
-    public Player[] promptChoosePlayerAction(String message, int numPlayers,
-                                             List<Player> pool) {
-        ArrayList<Object> playerPool = new ArrayList<>();
-        for (Player p: pool) {
-            if (!p.getTokens().contains(Shield.SHIELD)) {
+    public Player choosePlayer(String message, List<Player> pool) {
+        List<Object> playerPool = new ArrayList<>(pool);
+        for (Object p: playerPool) {
+            if (!((Player) p).getTokens().contains(Shield.SHIELD)) {
                 playerPool.add(p);
             }
         }
-        return Arrays.copyOf(choose(playerPool, numPlayers),
-            numPlayers, Player[].class);
+        return (Player) choose(message, playerPool);
+    } //TODO: Maybe make a method that lets someone choose multiple people
+
+    /** Makes this player vote for a player other than themselves. */
+    public void vote() {
+        List<Player> otherPlayers = new ArrayList<>(getGame().getPlayers());
+        otherPlayers.remove(this);
+        _vote = choosePlayer("Vote for another player (You may not vote for yourself): ", otherPlayers);
+    }
+
+    /** A getter method that returns the player this player voted for.
+     *
+     * @return the player this player voted for
+     */
+    public Player voted() {
+        return _vote;
     }
 
     /** A helper method that helps a player choose from a list/pool of
      *  objects (could be players, cards, etc.).
      *
+     * @param message the message to accompany the choice
      * @param c the list to choose from
-     * @param numObjects the number of objects to choose
      * @return an array of the objects chosen
      */
-    public Object[] choose(List<Object> c, int numObjects) { //TODO: Might have to create an interface Choosable or something,
+    public Object choose(String message, List<Object> c) { //TODO: Might have to create an interface Choosable or something,
         //TODO: so that when actually choosing something, you can click on the actual thing rather than some text buttons
         /*
         if (c.getClass() instanceof Chooseable){
@@ -182,11 +192,10 @@ public class Player {
 
     /** Kills this player (if they are able to be killed). */
     public void kill() {
-        if (_tokens.contains(Bonus1Token.PRINCE)
-            && !_tokens.contains(VampireMark.LOVE)) {
-
+        if (!_tokens.contains(Bonus1Token.PRINCE)
+            || _tokens.contains(VampireMark.LOVE)) {
+            _alive = false;
         }
-        _alive = false;
     }
 
     /** Gives this player their card along with their initial role (which is
@@ -238,6 +247,7 @@ public class Player {
                 //FIXME: Special cases: Marks (Artifacts taken card of in getEndRole
                 //TODO: Love (I think actually it's handled with lose() now, idk
                 //TODO: Traitor
+                return false;
             } else {
                 return getEndRole().won(_game, this);
             }
