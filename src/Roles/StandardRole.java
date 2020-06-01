@@ -142,9 +142,6 @@ public enum StandardRole implements Role {
                     currPlayer.showCard("The second card you picked was: ", card2);
                 } else {
                     List<Player> otherPlayers = currGame.getPlayers();
-
-                    //TODO: Needs to check for shield token
-
                     otherPlayers.remove(currPlayer);
                     Player chosen = currPlayer.choosePlayer(
                         "Pick another player.", otherPlayers);
@@ -168,9 +165,6 @@ public enum StandardRole implements Role {
         @Override
         public void doAction(Player currPlayer) {
             Game currGame = currPlayer.getGame();
-
-            //TODO: Needs to check for shield token
-
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                 || currPlayer.promptMayAction("You may exchange your card with another player's card, and then view your new card.")) {
                 List<Player> otherPlayers = currGame.getPlayers();
@@ -195,9 +189,6 @@ public enum StandardRole implements Role {
         @Override
         public void doAction(Player currPlayer) {
             Game currGame = currPlayer.getGame();
-
-            //TODO: Needs to check for shield token
-
             if (currGame.getHouseRules().contains(HouseRule.MANDATORY)
                 || currPlayer.promptMayAction("You may exchange cards between two other players.")) {
                 List<Player> otherPlayers = currGame.getPlayers();
@@ -224,9 +215,6 @@ public enum StandardRole implements Role {
         @Override
         public void doAction(Player currPlayer) {
             Game currGame = currPlayer.getGame();
-
-            //TODO: Needs to check for shield token
-
             Card chosen = currPlayer.chooseCard("You must exchange your card with a card from the center.", currGame.getMiddle());
             currGame.swapPlayerAndCenter(currPlayer, chosen);
         }
@@ -239,9 +227,6 @@ public enum StandardRole implements Role {
         @Override
         public void doAction(Player currPlayer) {
             Game currGame = currPlayer.getGame();
-
-            //TODO: Needs to check for shield token
-
             currPlayer.showCard("You are now: ", currPlayer.getCard());
         }
     },
