@@ -5,12 +5,12 @@ package Tokens;
  *
  * @author Evan Gao
  */
-public enum Bonus2Token implements Token { //FIXME: Are these Marks?
+public enum Bonus2Token implements Artifact {
     VAMPIRE("Mist of the Vampire") {
 
     }, TRAITOR("Dagger of the Traitor") {
 
-    }; //These two tokens seem to be repeats/copies of mark of the vampire and mark of the traitor from the Vampires expansion...
+    };
 
     /** The constructor for a DaybreakToken object. */
     Bonus2Token(String name) {

@@ -1,7 +1,11 @@
 package Gameplay;
 
+import Roles.AlienRole;
 import Roles.Role;
-import Tokens.Token;
+import Roles.StandardRole;
+import Roles.Teams.StandardTeam;
+import Roles.VampireRole;
+import Tokens.*;
 
 import java.util.*;
 
@@ -34,6 +38,8 @@ public class Player {
     private Set<Token> _tokens;
     /** The status of this player's mortality. */
     private boolean _alive;
+    /** The status of this player's victory. */
+    private boolean _won;
     /** The game that this player is a part of. */
     private Game _game;
 
@@ -47,6 +53,7 @@ public class Player {
         _game = game;
         _tokens = new HashSet<>();
         _alive = true;
+        _won = true;
     }
 
     /** Shows the provided card to this player.
@@ -98,6 +105,14 @@ public class Player {
         _tokens.add(t);
     }
 
+    /** A getter method that returns the set of this player's tokens.
+     *
+     * @return the set of this player's tokens
+     */
+    public Set<Token> getTokens() {
+        return new HashSet<>(_tokens);
+    }
+
     public void swapMark(Token markToken) {
         //TODO: Maybe try and do a more general swapToken method
         //Assumes that there is only one of each kind of token (i.e. one artifact, one mark, one whatever new tokens there are)
@@ -124,7 +139,10 @@ public class Player {
     }
 
     /** Prompts this player to pick a number of players equal to numPlayers from
-     *  the provided pool of players.
+     *  the provided pool of players. Will automatically remove any players
+     *  that are invalid choices (For example, if a player has a shield token).
+     *  //FIXME: Or, should I make it so that in choose, it gets rid of them? At the least,
+     *  FIXME: there should be an interface that greys out a player if they have the shield token or something and explains why
      *
      * @param message the message that is displayed along with the choice
      * @param numPlayers the number of players that will be selected
@@ -133,7 +151,12 @@ public class Player {
      */
     public Player[] promptChoosePlayerAction(String message, int numPlayers,
                                              List<Player> pool) {
-        ArrayList<Object> playerPool = new ArrayList<>(pool);
+        ArrayList<Object> playerPool = new ArrayList<>();
+        for (Player p: pool) {
+            if (!p.getTokens().contains(Shield.SHIELD)) {
+                playerPool.add(p);
+            }
+        }
         return Arrays.copyOf(choose(playerPool, numPlayers),
             numPlayers, Player[].class);
     }
@@ -157,8 +180,12 @@ public class Player {
 
     }
 
-    /** Kills this player by setting their _alive status to false. */
+    /** Kills this player (if they are able to be killed). */
     public void kill() {
+        if (_tokens.contains(Bonus1Token.PRINCE)
+            && !_tokens.contains(VampireMark.LOVE)) {
+
+        }
         _alive = false;
     }
 
@@ -191,6 +218,11 @@ public class Player {
         return _alive;
     }
 
+    /** Makes this player lose (for example, if they voted for Disease). */
+    public void lose() {
+        _won = false;
+    }
+
     /** A getter method that returns whether or not this player won. Assumes
      *  that the game is over.
      *
@@ -199,15 +231,16 @@ public class Player {
     public boolean isWinner() {
         assert _game.gameOver();
 
-        if (_tokens.size() > 0) {
-            //FIXME: Special cases: Marks and artifacts
+        if (!_won) {
             return false;
-            //Assume that the token's effects have already been applied somewhere along the way
-            //TODO: Maybe write a applyToken() method in Player
-            //FIXME: Tokens.Shield tokens don't affect marks!!!! AHHHH
-            //Watch out for the shield token and other tokens that don't do anything
         } else {
-            return getEndRole().won(_game, this);
+            if (_tokens.size() > 0) {
+                //FIXME: Special cases: Marks (Artifacts taken card of in getEndRole
+                //TODO: Love (I think actually it's handled with lose() now, idk
+                //TODO: Traitor
+            } else {
+                return getEndRole().won(_game, this);
+            }
         }
     }
 
@@ -257,7 +290,24 @@ public class Player {
      * game
      */
     public Role getEndRole() {
-        return getCard().getRole().getFinalRole();
+        if (_tokens.contains(DaybreakArtifact.WEREWOLF)) {
+            return StandardRole.WEREWOLF;
+        } else if (_tokens.contains(Bonus2Token.VAMPIRE)) {
+            return VampireRole.VAMPIRE;
+        } else if (_tokens.contains(Bonus3Token.ALIEN_ARTIFACT)) {
+            return AlienRole.ALIEN;
+        } else if (_tokens.contains(DaybreakArtifact.TANNER)) {
+            return StandardRole.TANNER;
+        } else if (_tokens.contains(DaybreakArtifact.VILLAGER)
+            || _tokens.contains(Bonus1Token.PRINCE)
+            || _tokens.contains(Bonus1Token.BODYGUARD)
+            || _tokens.contains(Bonus1Token.HUNTER)) {
+            return StandardRole.VILLAGER;
+        } else if (_tokens.contains(VampireMark.VAMPIRE)) {
+            return VampireRole.VAMPIRE;
+        } else {
+            return getCard().getRole().getFinalRole();
+        }
     }
 
     /** A getter method that returns this player's role at the start of the game.

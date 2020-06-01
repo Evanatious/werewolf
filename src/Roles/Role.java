@@ -14,7 +14,7 @@ import java.util.*;
 public interface Role {
     /** Perform this role's specified action.
      *
-     * @param currPlayer the Gameplay.Player who has this role
+     * @param currPlayer the player who has this role
      */
     default void doAction(Player currPlayer) {
         currPlayer.displayInfo(getDescription());

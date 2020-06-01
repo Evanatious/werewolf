@@ -6,6 +6,6 @@ package Roles.Teams;
  * @author Evan Gao
  */
 public enum VillainTeam implements Team {
-    HERO,
-    SUPERVILLAIN;
+    Hero,
+    Supervillain;
 }

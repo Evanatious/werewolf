@@ -96,8 +96,16 @@ public class Game {
         //TODO: Might combine all these phases into one general method that can take in any phase
     }
 
+    public static void dayPhase() {
+        //TODO: maybe needs a prevoting phase and a postvoting phase?
+
+    }
+
     public static void votingPhase() {
-        //TODO
+        //TODO: Maybe: a vote phase, a predeath phase, a death phase, a postdeath death phase, and then a calculate win phase
+        //TODO: Also, IN the death phase, there are things like people being immune so needing to shift votes, or epic battle multiple votes, or Richochet Rhino
+        //TODO: ALSO, Artifacts override Marks, cards, and Vote actions
+
     }
 
     /** A helper method that updates a player (because they now have a new role)
@@ -355,7 +363,7 @@ public class Game {
             } else { //TODO: This whole thing needs a LOT of testing
                 Set<Team> died = new HashSet<>();
                 boolean villageExists = _teams.contains(StandardTeam.Village);
-                boolean tannerDied = false;
+                boolean tannerDied = false; //FIXME: What about Mad scientist
 
                 for (Player p : _players) {
                     if (!p.isAlive()) {

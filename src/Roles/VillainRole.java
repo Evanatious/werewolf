@@ -15,31 +15,31 @@ import Roles.Teams.VillainTeam;
 public enum VillainRole implements Role {
     MIRROR_MAN("Mirror Man", StandardTeam.Neutral) {
 
-    }, TEMPTRESS("Temptress", VillainTeam.SUPERVILLAIN) {
+    }, TEMPTRESS("Temptress", VillainTeam.Supervillain) {
 
-    }, DR_PEEKER("Dr. Peeker", VillainTeam.SUPERVILLAIN) {
+    }, DR_PEEKER("Dr. Peeker", VillainTeam.Supervillain) {
 
-    }, RAPSCALLION("Rapscallion", VillainTeam.SUPERVILLAIN) {
+    }, RAPSCALLION("Rapscallion", VillainTeam.Supervillain) {
 
-    }, EVILOMETER("Evilometer", VillainTeam.HERO) {
+    }, EVILOMETER("Evilometer", VillainTeam.Hero) {
 
     }, MAD_SCIENTIST("Mad Scientist", StandardTeam.Neutral) {
 
     }, INTERN("Intern", StandardTeam.Neutral) {
 
-    }, ANNOYING_LAD("Annoying Lad", VillainTeam.HERO) {
+    }, ANNOYING_LAD("Annoying Lad", VillainTeam.Hero) {
 
-    }, DETECTOR("Detector", VillainTeam.HERO) {
+    }, DETECTOR("Detector", VillainTeam.Hero) {
 
-    }, ROLE_RETRIEVER("Role Retriever", VillainTeam.HERO) {
+    }, ROLE_RETRIEVER("Role Retriever", VillainTeam.Hero) {
 
-    }, VOODOO_LOU("Voodoo Lou", VillainTeam.HERO) {
+    }, VOODOO_LOU("Voodoo Lou", VillainTeam.Hero) {
 
-    }, SWITCHEROO("Switcheroo", VillainTeam.HERO) {
+    }, SWITCHEROO("Switcheroo", VillainTeam.Hero) {
 
-    }, SELF_AWARENESS_GIRL("Self-Awareness Girl", VillainTeam.HERO) {
+    }, SELF_AWARENESS_GIRL("Self-Awareness Girl", VillainTeam.Hero) {
 
-    }, FLIPPER("Flipper", VillainTeam.HERO) {
+    }, FLIPPER("Flipper", VillainTeam.Hero) {
 
     }, INNOCENT_BYSTANDER("Innocent Bystander", StandardTeam.Neutral) {
 
